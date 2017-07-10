@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">Environment</string>
+
+    <string-array name="mucdo">
+        <item>Nghiêm Trọng</item>
+        <item>Khá Nghiêm Trọng</item>
+        <item>Chưa Tốt</item>
+        <item>Bình Thường</item>
+        <item>Tốt</item>
+
+
+    </string-array>
+
+    <string-array name="mapTpe">
+        <item> Roadmap </item>
+        <item> Satellite  </item>
+        <item> Hybrid  </item>
+        <item> Terrain  </item>
+        <item> None  </item>
+
+
+    </string-array>
+    <string-array name="quan">
+        <item>Quận 1</item>
+        <item>Quận 12</item>
+        <item>Quận Thủ Đức</item>
+        <item>Quận 9</item>
+        <item>Quận Gò Vấp</item>
+        <item>Quận Bình Thạnh</item>
+        <item>Quận Tân Bình</item>
+        <item>Quận Tân Phú</item>
+        <item>Quận Phú Nhuận</item>
+        <item>Quận 2</item>
+        <item>Quận 3</item>
+        <item>Quận 10</item>
+        <item>Quận 11</item>
+        <item>Quận 4</item>
+        <item>Quận 5</item>
+        <item>Quận 6</item>
+        <item>Quận 8</item>
+        <item>Quận Bình Tân</item>
+        <item>Quận 7</item>
+        <item>Huyện Củ Chi</item>
+        <item>Huyện Hóc Môn</item>
+        <item>Huyện Bình Chánh</item>
+        <item>Huyện Nhà Bè</item>
+        <item>Huyện Cần Giờ</item>
+    </string-array>
+
+
+    <string-array name="duong">
+        <item>Alexandre de Rhodes</item>
+        <item>Bà Lê Chân</item>
+        <item>Bùi Thị Xuân</item>
+        <item>Bùi Viện</item>
+        <item>Cách Mạng Tháng Tám</item>
+
+
+        <item>Calmette</item>
+        <item>Cao Bá Nhạ</item>
+        <item>Cao Bá Quát</item>
+        <item>Cô Bắc</item>
+        <item>Cô Giang</item>
+        <item>Cống Quỳnh</item>
+        <item>Chu Mạnh Trinh</item>
+
+        <item>Chương Dương</item>
+
+        <item>Đặng Dung</item>
+        <item>Đặng Tất</item>
+        <item>Đặng Thị Nhu</item>
+        <item>Đặng Trần Côn</item>
+        <item>Đề Thám</item>
+
+        <item>Đinh Công Tráng</item>
+        <item>Đông Du</item>
+
+        <item>Đồng Khởi</item>
+
+        <item>Hai Bà Trưng</item>
+
+
+        <item>Hải Triều</item>
+        <item>Hàm Nghi</item>
+
+
+        <item>Hàn Thuyên</item>
+
+        <item>Hòa Mỹ</item>
+
+        <item>Hồ Hảo Hớn</item>
+
+        <item>Hồ Huấn Nghiệp</item>
+        <item></item>
+        <item>Hồ Tùng Mậu</item>
+
+
+        <item>Hoàng Sa</item>
+        <item>Huyền Quang</item>
+        <item>Huyền Trân Công Chúa</item>
+        <item>Huỳnh Khương Ninh</item>
+
+        <item>Huỳnh Thúc Kháng</item>
+
+
+        <item>Ký Con</item>
+
+        <item>Lê Anh Xuân</item>
+        <item>Lê Công Kiều</item>
+        <item>Lê Duẩn</item>
+        <item>Lê Lai</item>
+        <item>Lê Lợi</item>
+        <item>Lê Thánh Tôn</item>
+
+
+        <item>Lê Thị Hồng Gấm</item>
+        <item>Lê Thị Riêng</item>
+        <item>Lê Văn Hưu</item>
+        <item>Lương Hữu Khánh</item>
+
+        <item>Lưu Văn Lang</item>
+        <item>Lý Tự Trọng</item>
+        <item></item>
+        <item>Lý Văn Phức</item>
+        <item>Mã Lộ</item>
+        <item>Mạc Đĩnh Chi</item>
+
+        <item>Mạc Thị Bưởi</item>
+
+        <item>Mai Thị Lựu</item>
+        <item>Nam Kỳ Khởi Nghĩa</item>
+
+        <item>Nam Quốc Cang</item>
+        <item>Ngô Đức Kế</item>
+        <item>Ngô Văn Năm</item>
+        <item>Nguyễn Bỉnh Khiêm</item>
+        <item>Nguyễn Cảnh Chân</item>
+        <item>Nguyễn Công Trứ</item>
+        <item>Nguyễn Cư Trinh</item>
+        <item>Nguyễn Du</item>
+        <item>Nguyễn Đình Chiểu</item>
+        <item>Nguyễn Huệ</item>
+        <item>Nguyễn Hữu Cảnh</item>
+        <item>Nguyễn Hữu Cầu</item>
+        <item>Nguyễn Huy Tự</item>
+        <item>Nguyễn Khắc Nhu</item>
+        <item>Nguyễn Phi Khanh</item>
+        <item>Nguyễn Thái Bình</item>
+        <item>Bà Huyện Thanh Quan</item>
+        <item></item>
+        <item>Bàn Cờ</item>
+        <item>Cách Mạng Tháng Tám</item>
+        <item>Cao Thắng</item>
+        <item>Điện Biên Phủ</item>
+        <item>Đoàn Công Bửu</item>
+        <item>Hai Bà Trưng</item>
+        <item>Hồ Xuân Hương</item>
+        <item>Huỳnh Tịnh Của</item>
+        <item>Kỳ Đồng</item>
+        <item>Lê Ngô Cát</item>
+        <item>Lê Quý Đôn</item>
+        <item>Nguyễn Văn Trỗi</item>
+        <item>Lê Văn Sỹ</item>
+        <item>Lý Chính Thắng</item>
+        <item>Lý Thái Tổ</item>
+        <item>Cao Thắng</item>
+        <item>Cầm Bá Thước</item>
+        <item>Cô Bắc</item>
+        <item>Cô Giang</item>
+        <item>Chiến Thắng</item>
+        <item>Duy Tân</item>
+        <item>Đào Duy Anh</item>
+        <item>Đào Duy Từ</item>
+        <item>Đặng Thai Mai</item>
+        <item>Đặng Văn Ngữ</item>
+        <item>Đoàn Thị Điểm</item>
+        <item>Đỗ Tấn Phong</item>
+        <item>Hải Nam</item>
+        <item>Hoàng Diệu</item>
+        <item>Hoàng Minh Giám</item>
+        <item>Hoàng Văn Thụ</item>
+        <item>Hồ Biểu Chánh</item>
+        <item>Hồ Văn Huê</item>
+        <item>Huỳnh Văn Bánh</item>
+        <item>Lam Sơn</item>
+        <item>Lê Quý Đôn</item>
+        <item>Nguyễn Văn Trỗi</item>
+        <item>Lê Văn Sỹ</item>
+        <item>Mai Văn Ngọc</item>
+        <item>Ngô Thời Nhiệm</item>
+        <item>Nguyễn Đình Chiểu</item>
+        <item>Nguyễn Đình Chính</item>
+        <item>Nguyễn Kiệm</item>
+        <item>Nguyễn Thị Huỳnh</item>
+        <item>Nguyễn Trọng Tuyển</item>
+        <item>Nguyễn Trường Tộ</item>
+        <item>Nguyễn Văn Đậu</item>
+        <item>Nam Kỳ Khởi Nghĩa</item>
+        <item>Nguyễn Văn Trỗi</item>
+        <item>Nhiêu Tứ</item>
+        <item>Phan Đăng Lưu</item>
+        <item>Phan Đình Phùng</item>
+        <item>Phan Tây Hồ</item>
+        <item>Phan Xích Long</item>
+        <item>Phổ Quang</item>
+        <item>Thích Quảng Đức</item>
+        <item>Trần Cao Vân</item>
+        <item>Trần Huy Liệu</item>
+        <item>Trần Hữu Trang</item>
+        <item>Trần Kế Xương</item>
+        <item>Trần Khắc Chân</item>
+        <item>Trần Văn Đang</item>
+        <item>Trương Quốc Dung</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
+
+</resources>

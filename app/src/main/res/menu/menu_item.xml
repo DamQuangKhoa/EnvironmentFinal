@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<item
+    android:title="Setting"
+    android:icon="@mipmap/ic_seting"
+    app:showAsAction="ifRoom"
+    android:id="@+id/mnSetting"
+    >
+
+
+</item>
+    <item
+        android:title="Information"
+        android:icon="@mipmap/ic_info"
+        app:showAsAction="ifRoom"
+        android:id="@+id/mnInfo"
+        ></item>
+
+
+    <item
+        android:title="Search"
+        android:icon="@mipmap/ic_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:id="@+id/mnSearch"
+        ></item>
+
+    <item
+        android:title="Contact"
+        android:icon="@mipmap/ic_heart"
+        app:showAsAction="ifRoom"
+        android:id="@+id/mncontact"
+        ></item>
+
+
+</menu>

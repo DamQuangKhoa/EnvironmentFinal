@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Environment</string>
+    <string name="k_t_xe">Kẹt Xe</string>
+    <string name="m_c">Mức Độ</string>
+    <string name="ng_y_th_ng">Ngày Tháng</string>
+    <string name="nh_p_khu_v_c">Nhập Khu Vực</string>
+    <string name="nh_p_t_n_duong">Nhập Tên Đường</string>
+    <string name="onhie_m">Ô Nhiễm</string>
+    <string name="th_i_gian">Thời Gian</string>
+</resources>

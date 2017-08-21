@@ -32,7 +32,7 @@ public class MapAdapter implements GoogleMap.InfoWindowAdapter{
     @Override
     public View getInfoContents(Marker marker) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View view= inflater.inflate(R.layout.activity_maps,null);
+        View view= inflater.inflate(R.layout.item_map,null);
         ImageView imgHinhHienThi = (ImageView) view.findViewById(R.id.imgHinhHienThi);
         TextView txtDuongHienThi = (TextView) view.findViewById(R.id.txtDuongHienThi);
 

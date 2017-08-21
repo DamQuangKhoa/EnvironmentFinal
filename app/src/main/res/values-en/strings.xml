@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Environment</string>
+    <string name="k_t_xe">Traffic Jam</string>
+    <string name="m_c">Level</string>
+    <string name="ng_y_th_ng">Date</string>
+    <string name="nh_p_khu_v_c">Area</string>
+    <string name="nh_p_t_n_duong">Street</string>
+    <string name="onhie_m">Pollution</string>
+    <string name="th_i_gian">Time</string>
+</resources>

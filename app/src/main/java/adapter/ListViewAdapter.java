@@ -1,9 +1,11 @@
 package adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +56,37 @@ public class ListViewAdapter extends ArrayAdapter {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        for(int i=0;i< diadiem.getMucDo();i++){
-            ImageView btn = new ImageView(context);
-            btn.setImageResource(R.mipmap.ic_star);
-            btn.setLayoutParams(layoutParams); // hien len button
-            linear.addView(btn);
+
+
+        for(int i = 0; i< diadiem.getMucDoInt(); i++){
+            ImageView imageView = new ImageView(context);
+            imageView.setImageResource(R.mipmap.ic_star);
+            imageView.setLayoutParams(layoutParams); // hien len button
+            linear.addView(imageView);
         }
+        Log.e("AAA",diadiem.getMucDoInt()+"");
+        switch (diadiem.getMucDoInt()){
+            case 1:
+                linear.setBackgroundColor(Color.parseColor("#08f204"));
+                break;
+            case 2:
+                linear.setBackgroundColor(Color.parseColor("#f7f307"));
+                break;
+            case 3:
+                linear.setBackgroundColor(Color.parseColor("#f2aa02"));
+
+                break;
+            case 4:
+                linear.setBackgroundColor(Color.parseColor("#b53203"));
+                break;
+            case 5:
+                linear.setBackgroundColor(Color.parseColor("#f24102"));
+                break;
+            default:
+                linear.setBackgroundColor(Color.parseColor("#f24102"));
+                break;
+        }
+
         txtDuong.setText(diadiem.getTenDuong());
        txtQuan.setText(diadiem.getKhuVuc());
         txtThoiGian.setText(diadiem.getThoiGianBatDau());

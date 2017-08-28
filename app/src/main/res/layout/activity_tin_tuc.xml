@@ -52,10 +52,14 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <ListView
+                        <android.support.v7.widget.RecyclerView
                             android:id="@+id/lvKetXe"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:scrollbars="vertical"
+
+                            />
                     </LinearLayout>
 
                     <LinearLayout
@@ -64,10 +68,13 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <ListView
+                        <android.support.v7.widget.RecyclerView
                             android:id="@+id/lvONhiem"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:scrollbars="vertical"
+                            />
                     </LinearLayout>
 
                 </FrameLayout>

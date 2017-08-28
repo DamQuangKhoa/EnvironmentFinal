@@ -1,19 +1,18 @@
 package com.example.sky.environment;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -38,18 +37,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import adapter.ListViewAdapter;
+import adapter.DiaDiemAdapter;
+import controller.RecyclerViewClickListener;
 import model.Config;
 import model.DiaDiem;
 
+import static com.example.sky.environment.R.id.lvKetXe;
+import static com.example.sky.environment.R.id.lvONhiem;
+
 public class TinTuc extends AppCompatActivity {
-ListView lvKetXe,lvONhiem;
+//ListView lvKetXe,lvONhiem;
+RecyclerView.LayoutManager mLayoutManager1,mLayoutManager2;
+    RecyclerView recyclerViewKetXe,recyclerViewONhiem;
 List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
-ListViewAdapter ketXeadapter,oNhiemAdapter;
+//ListViewAdapter ketXeadapter,oNhiemAdapter;
+    DiaDiemAdapter ketXeAdapter,oNhiemAdapter;
     Calendar calendar;
     SimpleDateFormat sdf1;
     Map<Integer,List<DiaDiem>> mapDiaDiem;
-
+    RecyclerViewClickListener listener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +65,6 @@ ListViewAdapter ketXeadapter,oNhiemAdapter;
 //        getData(Config.URL);
     }
     private void addControls() {
-        ActionBar actionBar = getActionBar();
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost2);
         tabHost.setup();
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tab2_1");
@@ -72,38 +77,56 @@ ListViewAdapter ketXeadapter,oNhiemAdapter;
         tab2.setContent(R.id.tab2_2);
         tabHost.addTab(tab2);
 
-        lvKetXe = (ListView) findViewById(R.id.lvKetXe);
-        lvONhiem = (ListView) findViewById(R.id.lvONhiem);
+        recyclerViewKetXe = (RecyclerView) findViewById(lvKetXe);
+        recyclerViewONhiem = (RecyclerView) findViewById(lvONhiem);
+
+       mLayoutManager1 = new LinearLayoutManager(this);
+       mLayoutManager2 = new LinearLayoutManager(this);
+        recyclerViewKetXe.setLayoutManager(mLayoutManager1);
+        recyclerViewONhiem.setLayoutManager(mLayoutManager2);
+        recyclerViewKetXe.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewONhiem.setItemAnimator(new DefaultItemAnimator());
 
         mapDiaDiem = new LinkedHashMap<>();
         dsDiaDiem = new ArrayList<>();
         dsKetXe = new ArrayList<>();
         dsONhiem = new ArrayList<>();
 
-            ketXeadapter= new ListViewAdapter(TinTuc.this,
-                                            R.layout.item_listview,dsKetXe);
-            oNhiemAdapter= new ListViewAdapter(TinTuc.this,
-                                            R.layout.item_listview,dsONhiem);
-        lvKetXe.setAdapter(ketXeadapter);
-        lvONhiem.setAdapter(oNhiemAdapter);
+
+        ketXeAdapter = new DiaDiemAdapter(TinTuc.this,listener);
+        oNhiemAdapter= new DiaDiemAdapter(TinTuc.this,listener);
+
+        taoDsDiaDiemTest();
+        recyclerViewKetXe.setAdapter(ketXeAdapter);
+        recyclerViewONhiem.setAdapter(oNhiemAdapter);
+
+        ketXeAdapter.updateData(dsKetXe);
+        oNhiemAdapter.updateData(dsONhiem);
+
+
         calendar = Calendar.getInstance();
          sdf1 = new SimpleDateFormat("yyyy/MM/dd");
 
     }
-    private void addEvents() {
-        lvKetXe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                DiaDiem dd = dsDiaDiem.get(i);
-                Intent intent = new Intent(TinTuc.this,MainActivity.class);
-                intent.putExtra("DIADIEM",dd);
-                startActivity(intent);
-            }
-        });
 
-
+    private void taoDsDiaDiemTest() {
+        for (int i=0;i<10;i++){
+            DiaDiem dd = new DiaDiem("A","2017/7/15","Kẹt Xe",5,3,0,50,50);
+            dsKetXe.add(dd);
+        }
+        ketXeAdapter.notifyDataSetChanged();
     }
 
+    private void addEvents() {
+        listener = (view, position) -> {
+//           Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
+        DiaDiem dd = dsDiaDiem.get(position);
+        Intent intent = new Intent(TinTuc.this,MainActivity.class);
+        intent.putExtra("DIADIEM",dd);
+        startActivity(intent);
+
+    };
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = this.getMenuInflater();
@@ -192,7 +215,7 @@ public void changeMapToList(){
     dsONhiem = dsDiaDiem.stream()
             .filter(e -> e.getLoai().equals("Ô Nhiễm"))
             .collect(Collectors.toList());
-    ketXeadapter.notifyDataSetChanged();
+    ketXeAdapter.notifyDataSetChanged();
     oNhiemAdapter.notifyDataSetChanged();
 //    Log.e("FFF","Danh Sach Dia Diem Final: "+ dsDiaDiem);
 }

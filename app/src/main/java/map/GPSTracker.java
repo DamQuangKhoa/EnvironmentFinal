@@ -163,7 +163,7 @@ public class GPSTracker extends Service implements LocationListener {
         alertDialog.setMessage("GPS và Internet chưa được mở, bạn có muốn vào cái đặt?");
 
         // Setting Icon to Dialog
-        alertDialog.setIcon(R.drawable.seting);
+        alertDialog.setIcon(R.mipmap.ic_seting);
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Cài Đặt", new DialogInterface.OnClickListener() {

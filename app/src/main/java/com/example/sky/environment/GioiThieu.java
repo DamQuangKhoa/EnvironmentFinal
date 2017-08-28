@@ -11,12 +11,13 @@ import android.widget.ImageButton;
 
 import fragment.FragmentFirst;
 import fragment.FragmentSecond;
+import model.Config;
 
 public class GioiThieu extends AppCompatActivity {
     FragmentManager fragmentManager;
     ImageButton btnNext,btnPrevious,btnFinal;
-    public static final int FIRST=1,SECOND=2,COUNT=2;
-    public static final String FIRSTNAME="FIRST",SECONDNAME="SECOND";
+
+
     int current=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class GioiThieu extends AppCompatActivity {
        btnNext.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               if(current <COUNT){
+               if(current < Config.COUNT){
                    current++;
                 addTransaction(current);
                }
@@ -88,13 +89,17 @@ public class GioiThieu extends AppCompatActivity {
         Fragment recent= null;
         String nameOfFragment = "";
         switch (type){
-            case FIRST:
+            case Config.FIRST:
                 recent = new FragmentFirst();
-                nameOfFragment = FIRSTNAME;
+                nameOfFragment = Config.FIRSTNAME;
                 break;
-            case SECOND:
+            case Config.SECOND:
                 recent = new FragmentSecond();
-                nameOfFragment = SECONDNAME;
+                nameOfFragment = Config.SECONDNAME;
+                break;
+            case Config.THIRD:
+                recent = new FragmentSecond();
+                nameOfFragment = Config.THIRDNAME;
                 break;
         }
         fragmentTransaction.add(R.id.content,recent,nameOfFragment);

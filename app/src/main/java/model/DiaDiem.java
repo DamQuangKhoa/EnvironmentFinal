@@ -50,6 +50,13 @@ public boolean kiemTraKhongCoGiaTri(String data){
         this.tenDuong = tenDuong;
     }
 
+    public String getLoai() {
+        return loai;
+    }
+
+    public void setLoai(String loai) {
+        this.loai = loai;
+    }
 
     public String getKhuVuc()
     {

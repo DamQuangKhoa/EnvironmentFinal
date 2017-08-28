@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/calendar"
+        android:icon="@mipmap/ic_choice"
         android:title="Home" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/calendar"
+        android:icon="@mipmap/ic_new"
         android:title="setting" />
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/calendar"
+        android:icon="@mipmap/ic_maybay"
         android:title="Contact" />
 
 </menu>

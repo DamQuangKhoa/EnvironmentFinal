@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -43,13 +41,13 @@
             android:name=".ThongTin"
             android:label="@string/title_activity_maps" />
         <activity android:name=".TinTuc" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
-        <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="AIzaSyAPeodkcrzikkpyjIp7zoWKXPpVMg7TPMM" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyAPeodkcrzikkpyjIp7zoWKXPpVMg7TPMM" /> -->
 
-
+        <activity android:name=".Start"></activity>
     </application>
 
 </manifest>

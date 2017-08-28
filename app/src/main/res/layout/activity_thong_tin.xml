@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00993C"
+    android:background="@drawable/bg2"
     >
 
     <LinearLayout
-        android:layout_width="374dp"
-        android:layout_height="445dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="368dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         android:weightSum="1"
-        android:id="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -33,10 +36,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="1">
 
                 <RadioGroup
-                    android:layout_width="332dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -72,6 +76,7 @@
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
+                    android:layout_weight="0.18"
                     android:text="@string/nh_p_khu_v_c" />
 
                 <Spinner
@@ -82,6 +87,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
+                    android:layout_weight="0.13"
                     android:text="@string/m_c" />
 
                 <Spinner
@@ -145,22 +151,27 @@
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/btnGui"
+                    android:layout_width="232dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="36dp"
+                    android:layout_marginLeft="36dp"
+                    android:layout_marginRight="36dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#00B041"
+                    android:text="Submit"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+
+                    />
+                <!---->
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnGui"
-        android:layout_width="match_parent"
-        android:layout_height="31dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:background="#00B041"
-        android:text="Submit"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </android.support.constraint.ConstraintLayout>

@@ -9,7 +9,7 @@
     <color name="apptheme_color">#33b5e5</color>
     <color name="background">#00695C</color>
     <color name="button">#009688</color>
-    <color name="buttonOrange">#EF6C00</color>
-    <color name="buttonRed">#F44336</color>
+    <color name="buttonOrange">#ef6c00</color>
+    <color name="buttonRed">#f44336</color>
 
 </resources>

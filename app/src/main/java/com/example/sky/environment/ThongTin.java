@@ -62,7 +62,7 @@ public class ThongTin extends AppCompatActivity {
     }
 
     private void addEvents() {
-btnTime.setOnClickListener(v -> xuLyTime());
+        btnTime.setOnClickListener(v -> xuLyTime());
         btnDate.setOnClickListener(v -> xuLyDate());
         btnGui.setOnClickListener(v -> xulyGui());
     }

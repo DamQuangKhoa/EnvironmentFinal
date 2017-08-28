@@ -1,7 +1,10 @@
 package com.example.sky.environment;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -33,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import adapter.ListViewAdapter;
 import model.Config;
@@ -40,8 +44,8 @@ import model.DiaDiem;
 
 public class TinTuc extends AppCompatActivity {
 ListView lvKetXe,lvONhiem;
-List<DiaDiem> dsDiaDiem;
-ListViewAdapter adapter;
+List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
+ListViewAdapter ketXeadapter,oNhiemAdapter;
     Calendar calendar;
     SimpleDateFormat sdf1;
     Map<Integer,List<DiaDiem>> mapDiaDiem;
@@ -52,9 +56,10 @@ ListViewAdapter adapter;
         setContentView(R.layout.activity_tin_tuc);
         addControls();
         addEvents();
-        getData(Config.URL);
+//        getData(Config.URL);
     }
     private void addControls() {
+        ActionBar actionBar = getActionBar();
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost2);
         tabHost.setup();
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tab2_1");
@@ -72,12 +77,15 @@ ListViewAdapter adapter;
 
         mapDiaDiem = new LinkedHashMap<>();
         dsDiaDiem = new ArrayList<>();
+        dsKetXe = new ArrayList<>();
+        dsONhiem = new ArrayList<>();
 
-            adapter = new ListViewAdapter(TinTuc.this,
-                                            R.layout.item_listview,dsDiaDiem);
-        lvKetXe.setAdapter(adapter);
-        lvONhiem.setAdapter(adapter);
-
+            ketXeadapter= new ListViewAdapter(TinTuc.this,
+                                            R.layout.item_listview,dsKetXe);
+            oNhiemAdapter= new ListViewAdapter(TinTuc.this,
+                                            R.layout.item_listview,dsONhiem);
+        lvKetXe.setAdapter(ketXeadapter);
+        lvONhiem.setAdapter(oNhiemAdapter);
         calendar = Calendar.getInstance();
          sdf1 = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -90,7 +98,6 @@ ListViewAdapter adapter;
                 Intent intent = new Intent(TinTuc.this,MainActivity.class);
                 intent.putExtra("DIADIEM",dd);
                 startActivity(intent);
-
             }
         });
 
@@ -99,10 +106,8 @@ ListViewAdapter adapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = this.getMenuInflater();
         inflater.inflate(R.menu.menu_item,menu);
-
         MenuItem search = menu.findItem(R.id.mnSearch);
         android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) search.getActionView();
 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
@@ -113,7 +118,6 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        adapter.getFilter().filter(newText);
         return false;
     }
 });
@@ -122,6 +126,7 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -162,13 +167,14 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put(Config.ACTION,Config.CRD);
-                params.put(Config.TIME,"2017-08-12");
+                params.put(Config.TIME,date);
                 return params;
             }
         }
         ;
         requestQueue.add(stringRequest);
     }
+@RequiresApi(api = Build.VERSION_CODES.N)
 public void changeMapToList(){
     dsDiaDiem.clear();
     for (int i =5;i>0;i--){
@@ -179,7 +185,15 @@ public void changeMapToList(){
             dsDiaDiem.addAll(mapDiaDiem.get(i));
         }
     }
-    adapter.notifyDataSetChanged();
+
+    dsKetXe=dsDiaDiem.stream()
+            .filter(e -> e.getLoai().equals("Kẹt Xe"))
+            .collect(Collectors.toList());
+    dsONhiem = dsDiaDiem.stream()
+            .filter(e -> e.getLoai().equals("Ô Nhiễm"))
+            .collect(Collectors.toList());
+    ketXeadapter.notifyDataSetChanged();
+    oNhiemAdapter.notifyDataSetChanged();
 //    Log.e("FFF","Danh Sach Dia Diem Final: "+ dsDiaDiem);
 }
     private void xuLySRD(String response) {

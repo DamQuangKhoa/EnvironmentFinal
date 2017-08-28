@@ -222,7 +222,7 @@
     <string name="ng_y_th_ng">Ngày Tháng</string>
 
 
-=======
+    =======
     <string name="app_name">Final</string>
     <string name="forget_password"><u>Forgot Password</u></string>
     <string name="prompt_email">Email</string>
@@ -252,5 +252,5 @@
     <string name="post">Post</string>
     <string name="hello_world">Hello World</string>
     <string name="test">Hello Worlddasdasdas asdasd sadasd asdasd asdas asdasdasdasasdasdasd</string>
->>>>>>> origin/master
+    >>>>>>> origin/master
 </resources>

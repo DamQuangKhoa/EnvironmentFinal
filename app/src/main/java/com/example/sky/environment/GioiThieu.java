@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 
 import fragment.FragmentFirst;
 import fragment.FragmentSecond;
+import fragment.FragmentThird;
 import model.Config;
 
 public class GioiThieu extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class GioiThieu extends AppCompatActivity {
                 addTransaction(current);
                }
                else{
-              Intent intent = new Intent(GioiThieu.this,MainActivity.class);
+              Intent intent = new Intent(GioiThieu.this,Start.class);
                    startActivity(intent);
                }
            }
@@ -61,7 +62,7 @@ public class GioiThieu extends AppCompatActivity {
         btnFinal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GioiThieu.this,MainActivity.class);
+                Intent intent = new Intent(GioiThieu.this,Start.class);
                 startActivity(intent);
             }
         });
@@ -98,7 +99,7 @@ public class GioiThieu extends AppCompatActivity {
                 nameOfFragment = Config.SECONDNAME;
                 break;
             case Config.THIRD:
-                recent = new FragmentSecond();
+                recent = new FragmentThird();
                 nameOfFragment = Config.THIRDNAME;
                 break;
         }

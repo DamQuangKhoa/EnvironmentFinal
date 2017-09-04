@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,43 +14,69 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import adapter.MapAdapter;
-import map.GPSTracker;
+import controller.MyFunction;
+import model.Config;
 import model.DiaDiem;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     FloatingActionButton btnXuLy;
     private GoogleMap mMap;
+    Geocoder geocoder;
+    List<Address> addresses;
     TabHost tabHost;
-    Spinner spMap1, spMap2;
-    List<String> dsMapType;
+    String[] dsTenDuong;
+    ArrayAdapter<String> tenDuongAdapter;
     ArrayAdapter<String> mapTypeAdapter;
     ProgressDialog progressDialog;
     LatLng loca;
     Intent intent;
-    GPSTracker gps;
+//    GPSTracker gps;
     Location location;
-
+    String address="";
+    List<DiaDiem> dsDiaDiem;
+    boolean xemTinTuc= false;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -64,14 +93,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.navigation_notifications:
                     intent = new Intent(MainActivity.this,ThongTin.class);
 //                    Log.e("AAA",loca+"");
-                    intent.putExtra("Lat",loca.latitude);
-                    intent.putExtra("Long",loca.longitude);
-                    startActivity(intent);
+                    if(location != null) {
+                        intent.putExtra(Config.LAT, location.getLatitude());
+                        intent.putExtra(Config.LONG, location.getLongitude());
+                        startActivity(intent);
+                    }
                     return true;
             }
             return false;
         }
-
     };
 
 
@@ -79,14 +109,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             = new GoogleMap.OnMyLocationChangeListener() {
         @Override
         public void onMyLocationChange(Location loc) {
+            location =loc;
             loca= new LatLng(loc.getLatitude(), loc.getLongitude());
 //            Log.e("AAA","Lating: "+ loca);
-            if(mMap != null){
+            if(mMap != null && !xemTinTuc){
                 mMap.clear();
                mMap.addMarker(new MarkerOptions()
                     .position(loca)
-                        .title("Marker in Sydney")
-                      .snippet("Vi Tri Hien Tai"));
+                        .title("Vị Trí Bản Đồ")
+                      .snippet("Vi Tri Hiện Tại Của Bạn")
+               ).setIcon(BitmapDescriptorFactory
+                       .fromResource(R.mipmap.ic_location));;
 
 
                 mMap.animateCamera(CameraUpdateFactory
@@ -103,10 +136,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         addControls();
         addEvents();
-      hienThiDiaDiem();
-
+        initLocation();
     }
 
+    private void initLocation() {
+//        address=getAddress(location);
+        sendAddressToWeb(Config.currentAddress);
+    }
+
+    private String getAddress(Location loc){
+    geocoder = new Geocoder(this, Locale.getDefault());
+    String address="";
+    try {
+        addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        address= addresses.get(0).getAddressLine(0);
+//        Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
+
+    } catch (IOException e) {
+        Toast.makeText(this, "Loi Get Address", Toast.LENGTH_SHORT).show();
+        Log.e("Loi",e.getMessage());
+    }
+    return address;
+};
 
 
     private void addControls() {
@@ -125,77 +176,76 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        spMap1 = (Spinner) findViewById(R.id.spMap1);
-        spMap2 = (Spinner) findViewById(R.id.spMap2);
-        dsMapType = new ArrayList<>();
-        dsMapType.addAll(Arrays.asList(getResources().getStringArray(R.array.mapTpe)));
-        mapTypeAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item);
-        mapTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spMap1.setAdapter(mapTypeAdapter);
-//       spMap2.setAdapter(mapTypeAdapter);
+        dsTenDuong = getResources().getStringArray(R.array.duong);
+        tenDuongAdapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,dsTenDuong);
+        dsDiaDiem = new ArrayList<>();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setTitle("Thong Tin");
-        progressDialog.setMessage("Vui Lòng Chờ");
+        progressDialog.setTitle("Loading Map...");
+        progressDialog.setMessage("Vui Lòng Chờ...");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
+
+        xemTinTuc = false;
     }
 
     private void addEvents() {
 
-        spMap1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                xuLyTypeHienThi(i);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
                 if(s.equalsIgnoreCase("tab1")){
-                    Toast.makeText(getApplicationContext(), "Vao 1", Toast.LENGTH_SHORT).show();
-                    location =getLoCation();
+//                    location =getLoCation();
 
                 }
                 else if (s.equalsIgnoreCase("tab2")){
-                    Toast.makeText(getApplicationContext(), "Vao 2", Toast.LENGTH_SHORT).show();
-                    location=getLoCation();
+//                    location=getLoCation();
                 }
 
             }
         });
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = this.getMenuInflater();
+        inflater.inflate(R.menu.menu_item,menu);
+        MenuItem search = menu.findItem(R.id.mnSearch);
+        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) search.getActionView();
 
-    private void xuLyTypeHienThi(int position) {
-        switch (position) {
-            case 0:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                sendAddressToWeb(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                tenDuongAdapter.getFilter().filter(newText);
+                // hello world
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.mncontact:
                 break;
-            case 1:
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            case R.id.mnUpdate:
                 break;
-            case 2:
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            case R.id.mnSearch:
                 break;
-            case 3:
-                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                break;
-            case 4:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+            case R.id.mnSetting:
                 break;
         }
 
+        return super.onOptionsItemSelected(item);
     }
 
     private void xuLyGui() {
@@ -203,27 +253,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
        intent = new Intent(MainActivity.this, ThongTin.class);
         startActivity(intent);
     }
-    public Location getLoCation(){
-        Location res=null ;
-        gps = new GPSTracker(MainActivity.this);
-
-        // check if GPS enabled
-        if(gps.canGetLocation()){
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            res = new Location("vi tri");
-            res.setLatitude(latitude);
-            res.setLongitude(longitude);
-          Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-        }else{
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            Toast.makeText(getApplicationContext(), "Vao alert", Toast.LENGTH_SHORT).show();
-            gps.showSettingsAlert();
-        }
-        return res;
-    }
+//    public Location getLoCation(){
+//        Location res=null ;
+//        gps = new GPSTracker(MainActivity.this);
+//
+//        // check if GPS enabled
+//        if(gps.canGetLocation()){
+//            double latitude = gps.getLatitude();
+//            double longitude = gps.getLongitude();
+//            res = new Location("vi tri");
+//            res.setLatitude(latitude);
+//            res.setLongitude(longitude);
+//        }else{
+//            // can't get location
+//            // GPS or Network is not enabled
+//            // Ask user to enable GPS/network in settings
+//            gps.showSettingsAlert();
+//        }
+//        return res;
+//    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -244,11 +292,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onMapLoaded() {
-//                Toast.makeText(MainActivity.this,"Vao 2",Toast.LENGTH_LONG).show();
-//               Location location=mMap.getMyLocation();
+                hienThiDiaDiem();
 //               Toast.makeText(MainActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
-            if(loca != null) {
-                Toast.makeText(MainActivity.this, loca.latitude + "_" + loca.longitude, Toast.LENGTH_LONG).show();
+                if(loca != null) {
+//                Toast.makeText(MainActivity.this, loca.latitude + "_" + loca.longitude, Toast.LENGTH_LONG).show();
             }
                 progressDialog.dismiss();
             }
@@ -259,23 +306,130 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
-private void hienThiDiaDiem(){
-    Intent intent= getIntent();
-        DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
-if(dd != null){
-    LatLng sydney = new LatLng(dd.getLat(), dd.getLon());
-    Marker marker= mMap.addMarker(new MarkerOptions()
-            .position(sydney)
-            .title("Dia Diem")
-            .snippet(dd.getTenDuong()));
-    mMap.moveCamera(CameraUpdateFactory
-            .newLatLngZoom(sydney,16));
-//        Toast.makeText(MainActivity.this,dd.getTenDuong(),Toast.LENGTH_LONG).show();
-    mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this,dd));
-    marker.showInfoWindow();
-    }
-}
-    private void hienThiViTriHienTai() {
+    private void sendAddressToWeb(String address){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                MyFunction.makeToastTest(MainActivity.this,"Kiem Tra",response);
+                xuLySSA(response);
+                khoanhVungDiaDiem(dsDiaDiem);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            MyFunction.makeToastErro(MainActivity.this,"Xu Ly SSA",error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat sdf1 = new SimpleDateFormat(Config.sdfDate);
+                SimpleDateFormat sdf2 = new SimpleDateFormat(Config.sdfTime);
+                Map<String,String>  params = new HashMap<>();
+                params.put(Config.ACTION,Config.CSA);
+                params.put(Config.TENDUONG,address);
+//                params.put(Config.TIME,sdf1.format(calendar.getTime()));
+                params.put(Config.TIME,Config.currentTime);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+
 
     }
+
+    private void khoanhVungDiaDiem(List<DiaDiem> dsDiaDiem) {
+        PolygonOptions pgOption=new PolygonOptions();
+        LatLng latingTmp=null;
+        int countMucDo=0;
+        for (DiaDiem d:
+             dsDiaDiem) {
+            if(d.getMucDoInt()>2){
+                countMucDo++;
+            }
+            latingTmp = new LatLng(d.getLat(),d.getLon());
+            pgOption.add(latingTmp);
+
+            Marker marker= mMap.addMarker(new MarkerOptions()
+                    .position(latingTmp)
+                    .title("Dia Diem")
+                    .snippet(d.getTenDuong()));
+            mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this,d));
+            marker.setIcon(BitmapDescriptorFactory
+                    .fromResource(R.mipmap.ic_greendot));
+            marker.showInfoWindow();
+
+        }
+        Polygon polyGon= mMap.addPolygon(pgOption);
+        if(countMucDo>6){
+            polyGon.setStrokeColor(Color.RED);
+        }
+        else if(countMucDo>4){
+            polyGon.setStrokeColor(Color.BLUE);
+        }
+        else{
+            polyGon.setStrokeColor(Color.GREEN);
+        }
+
+    }
+
+    private void xuLySSA(String response) {
+        MyFunction.makeToastTest(this,"data SSA",response);
+        JSONObject objectTmp= null;
+        JSONArray arrayTmp=null;
+        DiaDiem dd = null;
+        dsDiaDiem.clear();
+        try {
+            arrayTmp = new JSONArray(response);
+            for (int i=0;i<arrayTmp.length();i++){
+                objectTmp = arrayTmp.getJSONObject(i);
+                 dd = new DiaDiem(
+                        objectTmp.getString("tenDuong"),
+                        objectTmp.getString("thoiGianBatDau"),
+                        objectTmp.getString("ketXe"),
+                        objectTmp.getInt("mucDo"),
+                        objectTmp.getInt("khuVuc"),
+                        objectTmp.getInt("hinhAnh"),
+                        objectTmp.getDouble("lat"),
+                        objectTmp.getDouble("lon")
+                );
+                dsDiaDiem.add(dd);
+            }
+        }catch (RuntimeException ex){
+            MyFunction.makeToastErro(this,"Loi Xu Ly SSA",ex.getMessage());
+        }catch (Exception ex){
+            MyFunction.makeToastErro(this,"Loi Xu Ly SSA",ex.getMessage());
+        }
+    }
+private void makeCircle(LatLng lat){
+    CircleOptions optionCircle=new CircleOptions();
+    optionCircle.center(lat).radius(100);
+    Circle cir=mMap.addCircle(optionCircle);
+    cir.setStrokeColor(Color.GREEN);
+    cir.setFillColor(Color.RED);
+}
+    private void hienThiDiaDiem(){
+        Intent intent= getIntent();
+        DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
+        if(dd != null){
+            xemTinTuc = true;
+            sendAddressToWeb(dd.getTenDuong());
+            LatLng sydney = new LatLng(dd.getLat(), dd.getLon());
+            if(mMap != null) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(sydney)
+                    .title("Dia Diem")
+                    .snippet(dd.getTenDuong()));
+            mMap.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(sydney, 16));
+            makeCircle(sydney);
+//        Toast.makeText(MainActivity.this,dd.getTenDuong(),Toast.LENGTH_LONG).show();
+            mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this, dd));
+            marker.setIcon(BitmapDescriptorFactory
+                    .fromResource(R.mipmap.ic_launcher));
+            marker.showInfoWindow();
+        }
+    }
+}
 }

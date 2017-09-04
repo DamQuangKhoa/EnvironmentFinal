@@ -1,6 +1,7 @@
 package controller;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -8,8 +9,13 @@ import android.widget.Toast;
  */
 
 public class MyFunction {
-    public static void makeToast(Activity manhinh,String text){
-        Toast.makeText(manhinh,text,Toast.LENGTH_LONG).show();
+    public static void makeToastErro(Activity manhinh,String alert,String erro){
+        Toast.makeText(manhinh,"LOI"+alert,Toast.LENGTH_LONG).show();
+        Log.e("LOI",erro);
+    }
+    public static void makeToastTest(Activity manhinh,String alert,String content){
+        Toast.makeText(manhinh,"Kiem tra"+alert,Toast.LENGTH_LONG).show();
+        Log.e("AAA",content);
     }
 
 }

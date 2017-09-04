@@ -7,8 +7,8 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.02" >
+        android:layout_height="wrap_content"
+        android:layout_weight="0.02">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,28 +31,31 @@
                 <TextView
                     android:id="@+id/txtDuong"
                     android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:layout_weight="0.79"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
                     android:paddingRight="120px"
                     android:paddingTop="30px"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:id="@+id/txtQuan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="120px"
-                    android:text="TextView"
-                    android:textAlignment="center" />
+                    android:text="Nguyen Van Troi"
+                    android:textAlignment="center"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtThoiGian"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="120px"
-                    android:text="TextView"
-                    android:textAlignment="center" />
+                    android:text="15/07/2017"
+                    android:textAlignment="inherit"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtQuan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="120px"
+                    android:text="Quận 3"
+                    android:textAlignment="inherit" />
 
                 <LinearLayout
                     android:id="@+id/linearStar"

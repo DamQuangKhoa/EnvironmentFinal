@@ -1,9 +1,11 @@
 package com.example.sky.environment;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,10 +37,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import adapter.DiaDiemAdapter;
 import controller.RecyclerViewClickListener;
+import map.GPSTracker;
 import model.Config;
 import model.DiaDiem;
 
@@ -56,13 +58,43 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
     SimpleDateFormat sdf1;
     Map<Integer,List<DiaDiem>> mapDiaDiem;
     RecyclerViewClickListener listener;
-    @Override
+    String dateCurrent="";
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    intent = new Intent(TinTuc.this,MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.navigation_dashboard:
+//                    Log.e("AAA",loca+"");
+                    return true;
+                case R.id.navigation_notifications:
+                    intent = new Intent(TinTuc.this,ThongTin.class);
+                    GPSTracker gps = new GPSTracker(TinTuc.this);
+                    Location loc=gps.getLocation();
+//                    Log.e("AAA",loca+"");
+                    if(loc != null) {
+                        intent.putExtra(Config.LAT, loc.getLatitude());
+                        intent.putExtra(Config.LONG, loc.getLongitude());
+                        startActivity(intent);
+                    }
+                    return true;
+            }
+            return false;
+        }
+    };
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tin_tuc);
-        addControls();
         addEvents();
-//        getData(Config.URL);
+        addControls();
+//        updateData();
     }
     private void addControls() {
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost2);
@@ -96,7 +128,7 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         ketXeAdapter = new DiaDiemAdapter(TinTuc.this,listener);
         oNhiemAdapter= new DiaDiemAdapter(TinTuc.this,listener);
 
-        taoDsDiaDiemTest();
+//        taoDsDiaDiemTest();
         recyclerViewKetXe.setAdapter(ketXeAdapter);
         recyclerViewONhiem.setAdapter(oNhiemAdapter);
 
@@ -119,8 +151,9 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
 
     private void addEvents() {
         listener = (view, position) -> {
-//           Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
-        DiaDiem dd = dsDiaDiem.get(position);
+//            Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
+
+        DiaDiem dd = dsKetXe.get(position);
         Intent intent = new Intent(TinTuc.this,MainActivity.class);
         intent.putExtra("DIADIEM",dd);
         startActivity(intent);
@@ -141,25 +174,30 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
     @Override
     public boolean onQueryTextChange(String newText) {
+    ketXeAdapter.getFilter().filter(newText);
         return false;
     }
 });
 
         return super.onCreateOptionsMenu(menu);
     }
+private void updateData(){
+//        dateCurrent = sdf1.format(calendar.getTime());
+    getData(Config.currentTime);
+}
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.mncontact:
                 Toast.makeText(TinTuc.this,"Contact",Toast.LENGTH_LONG).show();
 //                String date = sdf1.format(calendar.getTime());
-                getData("2017-08-12");
-                changeMapToList();
                 break;
-            case R.id.mnInfo:
+            case R.id.mnUpdate:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    updateData();
+                }
                 break;
             case R.id.mnSearch:
                 break;
@@ -178,12 +216,13 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             public void onResponse(String response) {
 //                Log.e("AAA",response);
                 xuLySRD(response);
+                changeMapToList();
             }
         },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("loi",error.getMessage());
+                        Log.e("loi get Data",error.getMessage());
                     }
                 }){
             @Override
@@ -197,9 +236,9 @@ searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
         ;
         requestQueue.add(stringRequest);
     }
-@RequiresApi(api = Build.VERSION_CODES.N)
 public void changeMapToList(){
     dsDiaDiem.clear();
+    Log.e("danh sach map dia diem",mapDiaDiem.toString());
     for (int i =5;i>0;i--){
         if(mapDiaDiem.get(i) == null){
             continue;
@@ -209,31 +248,46 @@ public void changeMapToList(){
         }
     }
 
-    dsKetXe=dsDiaDiem.stream()
-            .filter(e -> e.getLoai().equals("Kẹt Xe"))
-            .collect(Collectors.toList());
-    dsONhiem = dsDiaDiem.stream()
-            .filter(e -> e.getLoai().equals("Ô Nhiễm"))
-            .collect(Collectors.toList());
-    ketXeAdapter.notifyDataSetChanged();
-    oNhiemAdapter.notifyDataSetChanged();
+    for (DiaDiem d:
+         dsDiaDiem) {
+        if(d.getLoai().equalsIgnoreCase("Kẹt Xe")){
+            dsKetXe.add(d);
+        }
+        else{
+            dsONhiem.add(d);
+        }
+    }
+    Log.e("danh sach KX",dsKetXe.toString());
+//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//        dsKetXe=dsDiaDiem.stream()
+//                .filter(e -> e.getLoai().equals("Kẹt Xe"))
+//                .collect(Collectors.toList());
+//
+//    dsONhiem = dsDiaDiem.stream()
+//            .filter(e -> e.getLoai().equals("Ô Nhiễm"))
+//            .collect(Collectors.toList());
+//    }
+    ketXeAdapter.updateData(dsKetXe);
+    oNhiemAdapter.updateData(dsONhiem);
 //    Log.e("FFF","Danh Sach Dia Diem Final: "+ dsDiaDiem);
 }
-    private void xuLySRD(String response) {
+    private  Map<Integer,List<DiaDiem>> xuLySRD(String response) {
         JSONObject objectTmp= null;
         JSONArray arrayTmp=null;
         mapDiaDiem.clear();
         try {
-//            Log.e("DDD",response);
+            Log.e("DDD",response);
             JSONObject jsonObject =  new JSONObject(response);
+
             for (int i = 1; i<5 ; i++) {
-                if((arrayTmp = jsonObject.getJSONArray(i+"")).length() ==0){
+                if(!jsonObject.has(i+"")){
 //                    Log.e("AAA",i+"");
                     continue;
                 }
                 else{
 //                    Log.e("CCC",arrayTmp+"");
                     List<DiaDiem> list =  new ArrayList<>();
+                    arrayTmp = jsonObject.getJSONArray(i+"");
                     for (int j = 0; j<arrayTmp.length(); j++){
                         objectTmp = arrayTmp.getJSONObject(j);
                         DiaDiem dd = new DiaDiem(
@@ -254,9 +308,9 @@ public void changeMapToList(){
                 }
             }
 
-
         } catch (JSONException e) {
            Log.e("AAA","Loi Xu Ly SRD: "+ e.getMessage());
         }
+        return mapDiaDiem;
     }
 }

@@ -17,11 +17,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btnNew"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/button3"
-            android:layout_below="@+id/button3"
+            android:layout_alignStart="@+id/btnMap"
+            android:layout_below="@+id/btnMap"
             android:layout_marginTop="18dp"
             android:background="@null"
             android:textColor="#04fdf1"
@@ -32,7 +32,7 @@
             android:typeface="normal" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnMap"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
@@ -47,12 +47,12 @@
             />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnSendData"
             android:layout_width="200dp"
             android:textColor="#04fdf1"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/button4"
-            android:layout_below="@+id/button4"
+            android:layout_alignStart="@+id/btnNew"
+            android:layout_below="@+id/btnNew"
             android:layout_marginTop="24dp"
             android:background="@null"
             android:drawableLeft="@mipmap/ic_maybay"
@@ -62,11 +62,11 @@
             />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/btnGift"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/button2"
-            android:layout_below="@+id/button2"
+            android:layout_alignStart="@+id/btnSendData"
+            android:layout_below="@+id/btnSendData"
             android:layout_marginTop="22dp"
             android:background="@null"
             android:textColor="#04fdf1"
@@ -77,19 +77,18 @@
             />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/btnExit"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/button5"
-            android:layout_below="@+id/button5"
+            android:layout_alignStart="@+id/btnGift"
+            android:layout_below="@+id/btnGift"
             android:layout_marginTop="15dp"
-            android:textColor="#04fdf1"
             android:background="@null"
             android:drawableLeft="@mipmap/ic_exit"
-            android:textAlignment="viewStart"
             android:text="Thoát"
-            android:textStyle="bold"
-            />
+            android:textAlignment="viewStart"
+            android:textColor="#04fdf1"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageView2"

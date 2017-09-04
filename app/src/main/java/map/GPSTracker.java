@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.example.sky.environment.R;
 
@@ -41,14 +42,14 @@ public class GPSTracker extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
-
+    private static GPSTracker instance;
 
     public GPSTracker(Context mContext) {
         this.mContext = mContext;
         getLocation();
     }
 
-    private Location getLocation() {
+    public Location getLocation() {
         try {
             locationManager =(LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -67,7 +68,9 @@ public class GPSTracker extends Service implements LocationListener {
                 this.canGetLocation = true;
                 // First get location from Network Provider
                 if (isNetworkEnabled) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e("GPS","Vao isNetworkEnabled");
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         // here to request the missing permissions, and then overriding
@@ -80,9 +83,12 @@ public class GPSTracker extends Service implements LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    Log.e("GPS","locationManager "+"Vao locationManager ");
                     if (locationManager != null) {
+                        Log.e("GPS","Vao locationManager khong = null ");
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        Log.e("GPS","Vao Location = ");
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
@@ -91,6 +97,7 @@ public class GPSTracker extends Service implements LocationListener {
                 }
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
+                    Log.e("GPS","Vao isGPSEnabled ");
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -99,6 +106,7 @@ public class GPSTracker extends Service implements LocationListener {
                         if (locationManager != null) {
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            Log.e("GPS",location.toString());
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
@@ -155,15 +163,15 @@ public class GPSTracker extends Service implements LocationListener {
      * Function to show settings alert dialog
      * */
     public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext,R.style.MyDialogTheme);
 
         // Setting Dialog Title
         alertDialog.setTitle("Cài Đặt GPS ");
         // Setting Dialog Message
         alertDialog.setMessage("GPS và Internet chưa được mở, bạn có muốn vào cái đặt?");
-
         // Setting Icon to Dialog
-        alertDialog.setIcon(R.mipmap.ic_seting);
+        alertDialog.setIcon(R.mipmap.ic_maybay);
+
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Cài Đặt", new DialogInterface.OnClickListener() {

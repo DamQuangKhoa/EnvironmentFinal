@@ -3,6 +3,7 @@ package com.example.sky.environment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,7 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,6 +45,7 @@ public class ThongTin extends AppCompatActivity {
     RadioButton radONhiem,radKetXe;
     AutoCompleteTextView autoDuong;
     Spinner spKhuVuc,spMucDo;
+    TextView txtFail;
     ArrayAdapter<String> duongAdapter,khuVucAdapter,mucDoAdapter;
     String[] dsDuong;
     String[] dsKhuVuc;
@@ -50,6 +54,7 @@ public class ThongTin extends AppCompatActivity {
     SimpleDateFormat sdf1,sdf2;
     int lastItemKhuVuc =0,lastItemMucDo=0;
     DiaDiemChinh diaDiem;
+    boolean sendSuccess= false;
     double lat,lon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,15 @@ public class ThongTin extends AppCompatActivity {
 
         addControls();
         addEvents();
+        xuLyNhanDuLieu();
 
+    }
+
+    private void xuLyNhanDuLieu() {
+        Intent intent = getIntent();
+        lat=intent.getDoubleExtra(Config.LAT,-1);
+        lon =intent.getDoubleExtra(Config.LONG,-1);
+        Toast.makeText(this, "Nhan Du Lieu: "+lat+"_"+lon, Toast.LENGTH_SHORT).show();
     }
 
     private void addEvents() {
@@ -68,6 +81,7 @@ public class ThongTin extends AppCompatActivity {
     }
 
     private void xulyGui() {
+        sendSuccess = false;
         String tenDuong,khuVuc,mucDo,thoiGian,ngayThang;
         String ketXe;
         if(radKetXe.isChecked()){
@@ -93,23 +107,40 @@ public class ThongTin extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 lastItemMucDo = i;
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
             khuVuc = dsKhuVuc[lastItemKhuVuc];
             mucDo = dsMucDo[lastItemMucDo];
         ngayThang = txtDate.getText().toString();
-        thoiGian =ngayThang+" " +txtTime.getText().toString();
+        thoiGian  = ngayThang+" " +txtTime.getText().toString();
         diaDiem = new DiaDiemChinh(tenDuong,khuVuc,mucDo,ketXe,thoiGian,lat,lon);
-
 //        Log.e("AAA",diaDiem.toString());
-        guiDuLieuWeb(diaDiem);
-
+        sendSuccess = kiemTra(tenDuong,khuVuc,mucDo);
+        if(!sendSuccess) {
+            txtFail.setText("Bạn Chưa Nhập Tên Đường");
+            txtFail.setBackgroundColor(Color.RED);
+        }
+        else {
+            guiDuLieuWeb(diaDiem);
+        }
     }
-
+private boolean kiemTra(String... data){
+    for (String t :
+            data) {
+        if(t == null || t.trim().equals("")){
+            return false;
+        }
+        try {
+            int a = Integer.parseInt(t);
+        }
+        catch ( Exception e){
+            return false;
+        };
+    }
+        return true;
+}
     private void guiDuLieuWeb(DiaDiemChinh diaDiem) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
@@ -195,10 +226,11 @@ txtTime = (EditText) findViewById(R.id.txtTime);
         autoDuong = (AutoCompleteTextView) findViewById(R.id.autoDuong);
         spKhuVuc = (Spinner) findViewById(R.id.spKhuVuc);
         spMucDo = (Spinner) findViewById(R.id.spMucDo);
-
+        txtFail = (TextView) findViewById(R.id.txtFail);
         dsDuong = getResources().getStringArray(R.array.duong);
         dsKhuVuc = getResources().getStringArray(R.array.quan);
         dsMucDo = getResources().getStringArray(R.array.mucdo);
+
         khuVucAdapter = new ArrayAdapter<String>(
                 ThongTin.this,
                 android.R.layout.simple_list_item_1,
@@ -220,16 +252,14 @@ txtTime = (EditText) findViewById(R.id.txtTime);
         spKhuVuc.setAdapter(khuVucAdapter);
         spMucDo.setAdapter(mucDoAdapter);
 
-        sdf1 = new SimpleDateFormat("yyyy/MM/dd");
-        sdf2 = new SimpleDateFormat("HH:mm:ss");
+        sdf1 = new SimpleDateFormat(Config.sdfDate);
+        sdf2 = new SimpleDateFormat(Config.sdfTime);
 
         txtDate.setText(sdf1.format(calendar.getTime()));
         txtTime.setText(sdf2.format(calendar.getTime()));
 
 
-        Intent intent = getIntent();
-        lat=intent.getDoubleExtra("Lat",-1);
-        lon =intent.getDoubleExtra("Long",-1);
+
 //        Log.e("AAA",lat+" "+lon);
 
 

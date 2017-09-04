@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Ask user to enable GPS/network in settings
             Toast.makeText(getApplicationContext(), "Vao alert", Toast.LENGTH_SHORT).show();
             gps.showSettingsAlert();
+            // hello world
         }
         return res;
     }

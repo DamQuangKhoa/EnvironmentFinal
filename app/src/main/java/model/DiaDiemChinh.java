@@ -5,7 +5,7 @@ package model;
  */
 
 public class DiaDiemChinh {
-    private String duong,khuvuc,mucdo,loai,thoiGianBD,thoiGianKT;
+    private String duong,khuvuc,mucdo,loai,thoiGianBD,thoiGianKT,hinhAnh;
     private double latitude,longtitude;
 
     @Override
@@ -22,7 +22,15 @@ public class DiaDiemChinh {
                 '}';
     }
 
-    public DiaDiemChinh(String duong, String khuvuc, String mucdo, String loai, String thoiGianBD, double latitude, double longtitude) {
+    public String getHinhAnh() {
+        return hinhAnh;
+    }
+
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
+    }
+
+    public DiaDiemChinh(String duong, String khuvuc, String mucdo, String loai, String thoiGianBD, double latitude, double longtitude, String hinhanh) {
         this.duong = duong;
         this.khuvuc = khuvuc;
         this.mucdo = mucdo;
@@ -30,6 +38,8 @@ public class DiaDiemChinh {
         this.thoiGianBD = thoiGianBD;
         this.latitude = latitude;
         this.longtitude = longtitude;
+        this.hinhAnh= hinhanh;
+
     }
 
     public String getDuong() {

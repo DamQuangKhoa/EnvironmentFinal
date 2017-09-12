@@ -11,5 +11,6 @@
     <color name="button">#009688</color>
     <color name="buttonOrange">#ef6c00</color>
     <color name="buttonRed">#f44336</color>
+    <color name="colorAccent">#Fff</color>
 
 </resources>

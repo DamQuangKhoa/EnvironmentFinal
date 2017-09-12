@@ -11,13 +11,12 @@ public class DiaDiem implements Serializable {
     private double lat,lon;
     private boolean ketXe;
     private int mucDoInt;
-    private int hinhAnh;
-    private String loai;
+    private String loai,hinhAnh;
     private int khuVucInt;
 
     public DiaDiem() {
     }
-    public DiaDiem(String tenDuong,String thoiGianBatDau,String loai,int mucdo, int khuvuc,int hinhAnh,double lat,double lon){
+    public DiaDiem(String tenDuong,String thoiGianBatDau,String loai,int mucdo, int khuvuc,String hinhAnh,double lat,double lon){
         this.tenDuong = tenDuong;
         this.thoiGianBatDau= thoiGianBatDau;
         this.loai = loai;
@@ -27,6 +26,7 @@ public class DiaDiem implements Serializable {
         this.khuVucInt=khuvuc;
         this.lat = lat;
         this.lon = lon;
+        this.hinhAnh = hinhAnh;
     }
     public DiaDiem(String tenDuong, String khuVuc, String thoiGianBatDau, long lat, long lon, int mucDoInt) {
         this.tenDuong = tenDuong;
@@ -268,14 +268,11 @@ public boolean kiemTraKhongCoGiaTri(String data){
         }
     }
 
-    public int getHinhAnh() {
+    public String getHinhAnh() {
         return hinhAnh;
     }
 
-    public void setHinhAnh(int hinhAnh) {
-        if(kiemTraKhongCoGiaTri(hinhAnh+"")){
-            this.hinhAnh = 0;
-        }
+    public void setHinhAnh(String hinhAnh) {
         this.hinhAnh = hinhAnh;
     }
 }

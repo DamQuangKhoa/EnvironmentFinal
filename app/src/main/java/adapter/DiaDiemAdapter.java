@@ -1,8 +1,11 @@
 package adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,10 +86,17 @@ public void updateData(List<DiaDiem>  list){
         holder.txtDuong.setText(dd.getTenDuong());
         holder.txtQuan.setText(dd.getKhuVuc());
         holder.txtThoiGian.setText(dd.getThoiGianBatDau());
-
+        Bitmap bm = convertBase64ToBitmap(dd.getHinhAnh());
+        if(bm != null) {
+            holder.imgHinh.setImageBitmap(bm);
+        }
 
     }
-
+    private Bitmap convertBase64ToBitmap(String encodedImage){
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
+    }
     @Override
     public int getItemCount() {
         return listDiaDiem.size();
@@ -132,6 +142,8 @@ public void updateData(List<DiaDiem>  list){
                 notifyDataSetChanged();
             }
         }
+
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {

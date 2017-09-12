@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.sky.environment.TinTuc"
     android:theme="@style/MyCustomTheme"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/tintuc_app_bar_main2"
     >
 
     <LinearLayout

@@ -6,7 +6,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sky.environment.MainActivity">
+    tools:context="com.example.sky.environment.MainActivity"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/app_bar_main2"
+
+
+    >
 
     <LinearLayout
         android:id="@+id/linearLayout2"

@@ -1,20 +1,29 @@
 package com.example.sky.environment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -91,10 +100,10 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
     };
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tin_tuc);
+        setContentView(R.layout.tintuc_main2);
         addEvents();
         addControls();
-//        updateData();
+        updateData();
     }
     private void addControls() {
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost2);
@@ -113,7 +122,7 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         recyclerViewONhiem = (RecyclerView) findViewById(lvONhiem);
 
        mLayoutManager1 = new LinearLayoutManager(this);
-       mLayoutManager2 = new LinearLayoutManager(this);
+        mLayoutManager2 = new LinearLayoutManager(this);
         recyclerViewKetXe.setLayoutManager(mLayoutManager1);
         recyclerViewONhiem.setLayoutManager(mLayoutManager2);
         recyclerViewKetXe.setItemAnimator(new DefaultItemAnimator());
@@ -137,14 +146,34 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
 
 
         calendar = Calendar.getInstance();
-         sdf1 = new SimpleDateFormat("yyyy/MM/dd");
+        sdf1 = new SimpleDateFormat("yyyy/MM/dd");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
     }
 
     private void taoDsDiaDiemTest() {
         for (int i=0;i<10;i++){
-            DiaDiem dd = new DiaDiem("A","2017/7/15","Kẹt Xe",5,3,0,50,50);
-            dsKetXe.add(dd);
+//            DiaDiem dd = new DiaDiem("A","2017/7/15","Kẹt Xe",5,3,0,50,50);
+//            dsKetXe.add(dd);
         }
         ketXeAdapter.notifyDataSetChanged();
     }
@@ -195,9 +224,7 @@ private void updateData(){
 //                String date = sdf1.format(calendar.getTime());
                 break;
             case R.id.mnUpdate:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     updateData();
-                }
                 break;
             case R.id.mnSearch:
                 break;
@@ -214,7 +241,7 @@ private void updateData(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                Log.e("AAA",response);
+//                Log.e("Tin Tuc",response);
                 xuLySRD(response);
                 changeMapToList();
             }
@@ -257,7 +284,8 @@ public void changeMapToList(){
             dsONhiem.add(d);
         }
     }
-    Log.e("danh sach KX",dsKetXe.toString());
+//    Log.e("danh sach KX",dsKetXe.toString());
+
 //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //        dsKetXe=dsDiaDiem.stream()
 //                .filter(e -> e.getLoai().equals("Kẹt Xe"))
@@ -276,16 +304,16 @@ public void changeMapToList(){
         JSONArray arrayTmp=null;
         mapDiaDiem.clear();
         try {
-            Log.e("DDD",response);
+//            Log.e("DDD",response);
             JSONObject jsonObject =  new JSONObject(response);
-
-            for (int i = 1; i<5 ; i++) {
+//            Log.e("Tin tuc","Json: "+ jsonObject.toString());
+            for (int i = 1; i<=5 ; i++) {
                 if(!jsonObject.has(i+"")){
 //                    Log.e("AAA",i+"");
                     continue;
                 }
                 else{
-//                    Log.e("CCC",arrayTmp+"");
+//                    Log.e("Tin tuc","Vao Day: ");
                     List<DiaDiem> list =  new ArrayList<>();
                     arrayTmp = jsonObject.getJSONArray(i+"");
                     for (int j = 0; j<arrayTmp.length(); j++){
@@ -296,14 +324,14 @@ public void changeMapToList(){
                                 objectTmp.getString("ketXe"),
                                 objectTmp.getInt("mucDo"),
                                 objectTmp.getInt("khuVuc"),
-                                objectTmp.getInt("hinhAnh"),
+                                objectTmp.getString("hinhAnh"),
                                 objectTmp.getDouble("lat"),
                                 objectTmp.getDouble("lon")
                         );
-//                       Log.e("AAA","Dia Diem: "+dd.toString());
+//                       Log.e("Tintuc","Dia Diem: "+dd.toString());
                         list.add(dd);
                     }
-                    Log.e("BBB","Array So "+i +":"+list+"");
+//                    Log.e("tin tuc","Array So "+i +":"+list+"");
                     mapDiaDiem.put(i,list);
                 }
             }
@@ -312,5 +340,10 @@ public void changeMapToList(){
            Log.e("AAA","Loi Xu Ly SRD: "+ e.getMessage());
         }
         return mapDiaDiem;
+    }
+    private Bitmap convertBase64ToBitmap(String encodedImage){
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 }

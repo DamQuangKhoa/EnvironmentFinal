@@ -1,6 +1,9 @@
 package adapter;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,8 +39,13 @@ public class MapAdapter implements GoogleMap.InfoWindowAdapter{
         ImageView imgHinhHienThi = (ImageView) view.findViewById(R.id.imgHinhHienThi);
         TextView txtDuongHienThi = (TextView) view.findViewById(R.id.txtDuongHienThi);
 
-        imgHinhHienThi.setImageResource(diaDiem.getHinhAnh());
+        imgHinhHienThi.setImageBitmap(convertBase64ToBitmap(diaDiem.getHinhAnh()));
         txtDuongHienThi.setText(diaDiem.getTenDuong());
         return view;
+    }
+    private Bitmap convertBase64ToBitmap(String encodedImage){
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 }

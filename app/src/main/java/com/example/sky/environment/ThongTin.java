@@ -3,9 +3,16 @@ package com.example.sky.environment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,9 +22,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -29,6 +36,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -38,20 +48,21 @@ import model.Config;
 import model.DiaDiemChinh;
 
 public class ThongTin extends AppCompatActivity {
-
+    private static int RESULT_LOAD_IMAGE = 1;
     Button btnGui;
     EditText txtTime,txtDate;
-    ImageButton btnTime,btnDate;
+    ImageButton btnTime,btnDate,btnUpload;
+    ImageView imgView;
     RadioButton radONhiem,radKetXe;
     AutoCompleteTextView autoDuong;
     Spinner spKhuVuc,spMucDo;
-    TextView txtFail;
     ArrayAdapter<String> duongAdapter,khuVucAdapter,mucDoAdapter;
     String[] dsDuong;
     String[] dsKhuVuc;
     String[] dsMucDo;
     Calendar calendar;
     SimpleDateFormat sdf1,sdf2;
+    String base64="";
     int lastItemKhuVuc =0,lastItemMucDo=0;
     DiaDiemChinh diaDiem;
     boolean sendSuccess= false;
@@ -78,8 +89,78 @@ public class ThongTin extends AppCompatActivity {
         btnTime.setOnClickListener(v -> xuLyTime());
         btnDate.setOnClickListener(v -> xuLyDate());
         btnGui.setOnClickListener(v -> xulyGui());
+        btnUpload.setOnClickListener(v -> xuLyAnh());
     }
 
+    private void xuLyAnh() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            ImageView imageView = (ImageView) findViewById(R.id.imgView);
+
+            Bitmap bmp = null;
+            try {
+                bmp = getBitmapFromUri(selectedImage);
+                base64 = imgToBase64(bmp);
+//                Log.e("base64",base64);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            imgView.setImageBitmap(bmp);
+        }
+    }
+
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
+    }
+    public static String imgToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream out = null;
+        try {
+            out = new ByteArrayOutputStream();
+            // compress image
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, out);
+
+            out.flush();
+            out.close();
+
+            byte[] imgBytes = out.toByteArray();
+            return Base64.encodeToString(imgBytes, Base64.DEFAULT);
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private void xulyGui() {
         sendSuccess = false;
         String tenDuong,khuVuc,mucDo,thoiGian,ngayThang;
@@ -115,14 +196,14 @@ public class ThongTin extends AppCompatActivity {
             mucDo = dsMucDo[lastItemMucDo];
         ngayThang = txtDate.getText().toString();
         thoiGian  = ngayThang+" " +txtTime.getText().toString();
-        diaDiem = new DiaDiemChinh(tenDuong,khuVuc,mucDo,ketXe,thoiGian,lat,lon);
 //        Log.e("AAA",diaDiem.toString());
-        sendSuccess = kiemTra(tenDuong,khuVuc,mucDo);
+        sendSuccess = kiemTra(tenDuong,khuVuc,mucDo,base64);
         if(!sendSuccess) {
-            txtFail.setText("Bạn Chưa Nhập Tên Đường");
-            txtFail.setBackgroundColor(Color.RED);
+            autoDuong.setBackgroundColor(Color.RED);
+            btnUpload.setBackgroundColor(Color.RED);
         }
         else {
+            diaDiem = new DiaDiemChinh(tenDuong,khuVuc,mucDo,ketXe,thoiGian,lat,lon,base64);
             guiDuLieuWeb(diaDiem);
         }
     }
@@ -132,12 +213,6 @@ private boolean kiemTra(String... data){
         if(t == null || t.trim().equals("")){
             return false;
         }
-        try {
-            int a = Integer.parseInt(t);
-        }
-        catch ( Exception e){
-            return false;
-        };
     }
         return true;
 }
@@ -167,6 +242,8 @@ private boolean kiemTra(String... data){
                 params.put(Config.TIME,diaDiem.getThoiGianBD());
                 params.put(Config.LAT,diaDiem.getLatitude()+"");
                 params.put(Config.LONG,diaDiem.getLongtitude()+"");
+                params.put(Config.HINHANH,diaDiem.getHinhAnh()+"");
+
                 return params;
             }
         };
@@ -226,11 +303,11 @@ txtTime = (EditText) findViewById(R.id.txtTime);
         autoDuong = (AutoCompleteTextView) findViewById(R.id.autoDuong);
         spKhuVuc = (Spinner) findViewById(R.id.spKhuVuc);
         spMucDo = (Spinner) findViewById(R.id.spMucDo);
-        txtFail = (TextView) findViewById(R.id.txtFail);
         dsDuong = getResources().getStringArray(R.array.duong);
         dsKhuVuc = getResources().getStringArray(R.array.quan);
         dsMucDo = getResources().getStringArray(R.array.mucdo);
-
+        btnUpload = (ImageButton) findViewById(R.id.btnUpload);
+        imgView = (ImageView) findViewById(R.id.imgView);
         khuVucAdapter = new ArrayAdapter<String>(
                 ThongTin.this,
                 android.R.layout.simple_list_item_1,

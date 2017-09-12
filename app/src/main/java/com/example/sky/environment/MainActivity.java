@@ -12,13 +12,20 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -57,10 +64,11 @@ import java.util.Map;
 
 import adapter.MapAdapter;
 import controller.MyFunction;
+import map.GPSTracker;
 import model.Config;
 import model.DiaDiem;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
     FloatingActionButton btnXuLy;
     private GoogleMap mMap;
     Geocoder geocoder;
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ProgressDialog progressDialog;
     LatLng loca;
     Intent intent;
-//    GPSTracker gps;
+    GPSTracker gps;
     Location location;
     String address="";
     List<DiaDiem> dsDiaDiem;
@@ -97,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         intent.putExtra(Config.LAT, location.getLatitude());
                         intent.putExtra(Config.LONG, location.getLongitude());
                         startActivity(intent);
+                    }
+                    else{
+                        gps = new GPSTracker(MainActivity.this);
+                        gps.showSettingsAlert();
                     }
                     return true;
             }
@@ -133,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
         addControls();
         addEvents();
-        initLocation();
+//        initLocation();
     }
 
     private void initLocation() {
@@ -190,6 +202,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressDialog.show();
 
         xemTinTuc = false;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     private void addEvents() {
@@ -311,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                MyFunction.makeToastTest(MainActivity.this,"Kiem Tra",response);
+//                MyFunction.makeToastTest(MainActivity.this,"Kiem Tra",response);
                 xuLySSA(response);
                 khoanhVungDiaDiem(dsDiaDiem);
             }
@@ -335,47 +370,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         requestQueue.add(stringRequest);
-
-
     }
-
     private void khoanhVungDiaDiem(List<DiaDiem> dsDiaDiem) {
         PolygonOptions pgOption=new PolygonOptions();
         LatLng latingTmp=null;
         int countMucDo=0;
-        for (DiaDiem d:
-             dsDiaDiem) {
-            if(d.getMucDoInt()>2){
-                countMucDo++;
+        if(dsDiaDiem.size()>0) {
+            for (DiaDiem d :
+                    dsDiaDiem) {
+                if (d.getMucDoInt() > 2) {
+                    countMucDo++;
+                }
+                latingTmp = new LatLng(d.getLat(), d.getLon());
+                pgOption.add(latingTmp);
+
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(latingTmp)
+                        .title("Dia Diem")
+                        .snippet(d.getTenDuong()));
+                mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this, d));
+                marker.setIcon(BitmapDescriptorFactory
+                        .fromResource(R.mipmap.ic_greendot));
+                marker.showInfoWindow();
+
             }
-            latingTmp = new LatLng(d.getLat(),d.getLon());
-            pgOption.add(latingTmp);
-
-            Marker marker= mMap.addMarker(new MarkerOptions()
-                    .position(latingTmp)
-                    .title("Dia Diem")
-                    .snippet(d.getTenDuong()));
-            mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this,d));
-            marker.setIcon(BitmapDescriptorFactory
-                    .fromResource(R.mipmap.ic_greendot));
-            marker.showInfoWindow();
-
+            Polygon polyGon = mMap.addPolygon(pgOption);
+            if (countMucDo > 6) {
+                polyGon.setStrokeColor(Color.RED);
+            } else if (countMucDo > 4) {
+                polyGon.setStrokeColor(Color.BLUE);
+            } else {
+                polyGon.setStrokeColor(Color.GREEN);
+            }
         }
-        Polygon polyGon= mMap.addPolygon(pgOption);
-        if(countMucDo>6){
-            polyGon.setStrokeColor(Color.RED);
-        }
-        else if(countMucDo>4){
-            polyGon.setStrokeColor(Color.BLUE);
-        }
-        else{
-            polyGon.setStrokeColor(Color.GREEN);
-        }
-
     }
-
     private void xuLySSA(String response) {
-        MyFunction.makeToastTest(this,"data SSA",response);
+//        MyFunction.makeToastTest(this,"data SSA",response);
         JSONObject objectTmp= null;
         JSONArray arrayTmp=null;
         DiaDiem dd = null;
@@ -390,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         objectTmp.getString("ketXe"),
                         objectTmp.getInt("mucDo"),
                         objectTmp.getInt("khuVuc"),
-                        objectTmp.getInt("hinhAnh"),
+                        objectTmp.getString("hinhAnh"),
                         objectTmp.getDouble("lat"),
                         objectTmp.getDouble("lon")
                 );
@@ -432,4 +462,38 @@ private void makeCircle(LatLng lat){
         }
     }
 }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

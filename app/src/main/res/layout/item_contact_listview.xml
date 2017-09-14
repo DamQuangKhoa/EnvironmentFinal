@@ -39,7 +39,6 @@
             android:id="@+id/discrip_textView"
             android:textStyle="bold"
             android:layout_weight="6"
-            android:text="@string/test"
             android:textSize="@dimen/text_normal_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

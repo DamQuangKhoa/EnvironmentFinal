@@ -70,12 +70,12 @@ public class LoginActivity extends AppCompatActivity {
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Nhập địa chỉ email của bạn!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  getString(R.string.input_email), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Nhập password vào nhé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  getString(R.string.input_password), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -99,7 +99,6 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Intent intent = new Intent(LoginActivity.this, GioiThieu.class);
-                                    Toast.makeText(LoginActivity.this, "Login Thanh Cong", Toast.LENGTH_SHORT).show();
                                     startActivity(intent);
                                     finish();
                                 }

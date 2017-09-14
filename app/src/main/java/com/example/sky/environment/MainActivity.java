@@ -4,11 +4,17 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +33,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,10 +58,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +84,7 @@ import model.Config;
 import model.DiaDiem;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
+    private static int RESULT_LOAD_IMAGE = 1;
     FloatingActionButton btnXuLy;
     private GoogleMap mMap;
     Geocoder geocoder;
@@ -84,7 +100,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Location location;
     String address="";
     List<DiaDiem> dsDiaDiem;
+    TextView txtEmail,txtUser;
+    ImageView imgUser;
+    ImageButton btnEditUser;
     boolean xemTinTuc= false;
+    FirebaseUser user;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -224,11 +244,49 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header=navigationView.getHeaderView(0);
 
+
+        btnEditUser = (ImageButton) header.findViewById(R.id.btnEditUser);
+        txtUser = (TextView) header.findViewById(R.id.txtUser);
+        txtEmail = (TextView) header.findViewById(R.id.txtMail);
+        imgUser = (ImageView) header.findViewById(R.id.imgUser);
+
+         user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+//            Log.e("firebase",name+"_"+email+"_"+photoUrl);
+//            txtUser.setText(name);
+            txtUser.setText(email);
+            try {
+                if(photoUrl != null) {
+                    imgUser.setImageBitmap(getBitmapFromUri(photoUrl));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            // No user is signed in
+        }
+    }
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
     }
 
     private void addEvents() {
+        btnEditUser.setOnClickListener(v ->{
+            pickImageFromGallery();
 
+        });
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
@@ -243,6 +301,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+    }
+
+    private void pickImageFromGallery() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+
+            Bitmap bmp = null;
+            try {
+                bmp = getBitmapFromUri(selectedImage);
+
+//                Log.e("base64",base64);
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                                .setPhotoUri(selectedImage)
+                                                                .build();
+                user.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("TAG", "User profile updated.");
+                                }
+                            }
+                        });
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            imgUser.setImageBitmap(bmp);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -288,26 +394,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
        intent = new Intent(MainActivity.this, ThongTin.class);
         startActivity(intent);
     }
-//    public Location getLoCation(){
-//        Location res=null ;
-//        gps = new GPSTracker(MainActivity.this);
-//
-//        // check if GPS enabled
-//        if(gps.canGetLocation()){
-//            double latitude = gps.getLatitude();
-//            double longitude = gps.getLongitude();
-//            res = new Location("vi tri");
-//            res.setLatitude(latitude);
-//            res.setLongitude(longitude);
-//        }else{
-//            // can't get location
-//            // GPS or Network is not enabled
-//            // Ask user to enable GPS/network in settings
-//            gps.showSettingsAlert();
-//        }
-//        return res;
-//    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -335,11 +421,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 progressDialog.dismiss();
             }
         });
-
 ////        Toast.makeText(MainActivity.this,"Vao 2",Toast.LENGTH_LONG).show();
-
-
-
     }
     private void sendAddressToWeb(String address){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -462,24 +544,25 @@ private void makeCircle(LatLng lat){
         }
     }
 }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_user_setting) {
+            changeUserSetting();
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_change_password) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_change_language) {
+            changeLanguageSetting();
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_grade) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_sign_out) {
 
         }
 
@@ -487,6 +570,18 @@ private void makeCircle(LatLng lat){
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void changeUserSetting() {
+        Intent intent = new Intent(getApplicationContext(),ChangeUserInformation.class);
+        startActivity(intent);
+    }
+
+    private void changeLanguageSetting() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName("com.android.settings", "com.android.settings.LanguageSettings");
+        startActivity(intent);
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

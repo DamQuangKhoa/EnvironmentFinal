@@ -4,20 +4,20 @@
 
     >
 <item
-    android:title="Setting"
+    android:title="@string/menu_setting"
     android:icon="@mipmap/ic_seting"
     android:id="@+id/mnSetting"
     >
 </item>
     <item
-        android:title="Update"
+        android:title="@string/menu_update"
         app:showAsAction="always"
         android:id="@+id/mnUpdate"
         ></item>
 
 
     <item
-        android:title="Search"
+        android:title="@string/menu_search"
         android:icon="@mipmap/ic_search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView"
@@ -25,7 +25,7 @@
         ></item>
 
     <item
-        android:title="Contact"
+        android:title="@string/menu_contact"
         android:icon="@mipmap/ic_heart"
         app:showAsAction="ifRoom"
         android:id="@+id/mncontact"

@@ -8,16 +8,16 @@
 
         android:id="@+id/navigation_home"
         android:icon="@mipmap/ic_choice"
-        android:title="Home" />
+        android:title="@string/menu_home" />
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@mipmap/ic_new"
-        android:title="setting" />
+        android:title="@string/menu_setting" />
 
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@mipmap/ic_maybay"
-        android:title="Contact" />
+        android:title="@string/menu_contact" />
 
 </menu>

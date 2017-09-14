@@ -43,7 +43,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 String email = inputEmail.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Nhập Địa Chỉ Email Của Bạn", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), getString(R.string.input_email), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);
@@ -52,9 +52,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPasswordActivity.this, "Chúng tôi đã gửi mail hướng dẫn để thay đổi password của bạn ! ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetPasswordActivity.this,getString(R.string.send_password_reset_email), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ResetPasswordActivity.this, "Gửi email thất bại!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ResetPasswordActivity.this,getString(R.string.email_send_fail) , Toast.LENGTH_SHORT).show();
                                 }
                                 progressBar.setVisibility(View.GONE);
                             }

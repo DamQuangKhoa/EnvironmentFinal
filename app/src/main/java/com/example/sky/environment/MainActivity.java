@@ -361,7 +361,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onQueryTextSubmit(String query)
             {
-                sendAddressToWeb(query);
+                Log.e("searchview",query);
+//                sendAddressToWeb(query);
                 return false;
             }
             @Override
@@ -435,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-            MyFunction.makeToastErro(MainActivity.this,"Xu Ly SSA",error.toString());
+            MyFunction.makeToastErro(MainActivity.this,getString(R.string.SSA_Error),error.toString());
             }
         }){
             @Override
@@ -509,9 +510,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 dsDiaDiem.add(dd);
             }
         }catch (RuntimeException ex){
-            MyFunction.makeToastErro(this,"Loi Xu Ly SSA",ex.getMessage());
+            MyFunction.makeToastErro(this,getString(R.string.SSA_Error),ex.getMessage());
+            Log.e("SSA","Loi: "+ ex.getMessage());
         }catch (Exception ex){
-            MyFunction.makeToastErro(this,"Loi Xu Ly SSA",ex.getMessage());
+            MyFunction.makeToastErro(this,getString(R.string.SSA_Error),ex.getMessage());
+            Log.e("SSA","Loi: "+ ex.getMessage());
         }
     }
 private void makeCircle(LatLng lat){
@@ -553,9 +556,7 @@ private void makeCircle(LatLng lat){
         if (id == R.id.nav_user_setting) {
             changeUserSetting();
             // Handle the camera action
-        } else if (id == R.id.nav_change_password) {
-
-        } else if (id == R.id.nav_change_language) {
+        }  else if (id == R.id.nav_change_language) {
             changeLanguageSetting();
 
         } else if (id == R.id.nav_grade) {
@@ -563,7 +564,7 @@ private void makeCircle(LatLng lat){
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_sign_out) {
-
+            FirebaseAuth.getInstance().signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

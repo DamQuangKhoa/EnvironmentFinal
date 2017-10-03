@@ -7,13 +7,13 @@
             android:icon="@mipmap/ic_choice"
             android:title="@string/nav_user_setting" />
         <item
-            android:id="@+id/nav_change_password"
-            android:icon="@mipmap/ic_choice"
-            android:title="@string/nav_change_password" />
-        <item
             android:id="@+id/nav_change_language"
             android:icon="@mipmap/ic_choice"
             android:title="@string/nav_change_language" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@mipmap/ic_choice"
+            android:title="@string/nav_history" />
         <item
             android:id="@+id/nav_grade"
             android:icon="@mipmap/ic_choice"

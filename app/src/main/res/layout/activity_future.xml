@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.sky.environment.Future">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:id="@+id/btnComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.00"
+                    android:background="@null"
+                    app:srcCompat="@drawable/binhluan" />
+
+                <ImageButton
+                    android:id="@+id/btnInviteFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.00"
+                    android:background="@null"
+                    app:srcCompat="@drawable/moibanbe" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="126dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="131dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/diemthuong" />
+
+                <ImageButton
+                    android:id="@+id/btnGift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="129dp"
+                    android:layout_weight="0.52"
+                    android:background="@null"
+                    app:srcCompat="@drawable/quatang" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.00"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnPerson"
+                    android:layout_width="wrap_content"
+                    android:layout_height="133dp"
+                    android:layout_weight="0.33"
+                    android:background="@null"
+                    app:srcCompat="@drawable/canhan" />
+
+                <ImageButton
+                    android:id="@+id/btnStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.40"
+                    android:background="@null"
+                    app:srcCompat="@drawable/like" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.00"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnSupport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    app:srcCompat="@drawable/hotro" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <android.support.design.widget.BottomNavigationView
+          android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/navigation" >
+
+
+    </android.support.design.widget.BottomNavigationView>
+
+</LinearLayout>

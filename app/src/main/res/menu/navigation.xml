@@ -20,4 +20,9 @@
         android:icon="@mipmap/ic_maybay"
         android:title="@string/menu_contact" />
 
+    <item
+        android:id="@+id/menu"
+        android:icon="@mipmap/ic_destop"
+        android:title="@string/menu_contact" />
+
 </menu>

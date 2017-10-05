@@ -57,11 +57,9 @@ import static com.example.sky.environment.R.id.lvKetXe;
 import static com.example.sky.environment.R.id.lvONhiem;
 
 public class TinTuc extends AppCompatActivity {
-//ListView lvKetXe,lvONhiem;
 RecyclerView.LayoutManager mLayoutManager1,mLayoutManager2;
     RecyclerView recyclerViewKetXe,recyclerViewONhiem;
 List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
-//ListViewAdapter ketXeadapter,oNhiemAdapter;
     DiaDiemAdapter ketXeAdapter,oNhiemAdapter;
     Calendar calendar;
     SimpleDateFormat sdf1;

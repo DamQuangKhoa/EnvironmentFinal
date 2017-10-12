@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<DiaDiem> dsDiaDiem;
     TextView txtEmail,txtUser;
     ImageView imgUser;
+    private FirebaseAuth auth;
     ImageButton btnEditUser;
     boolean xemTinTuc= false;
     FirebaseUser user;
@@ -116,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.navigation_dashboard:
                     intent = new Intent(MainActivity.this,TinTuc.class);
 //                    Log.e("AAA",loca+"");
+                    startActivity(intent);
+                    return true;
+                case R.id.menu:
+                    intent = new Intent(MainActivity.this,Future.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_notifications:
@@ -190,8 +195,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     return address;
 };
-
-
     private void addControls() {
          tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
@@ -199,12 +202,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         tab1.setIndicator("",getResources().getDrawable(R.drawable.lua));
         tab1.setContent(R.id.tab1);
         tabHost.addTab(tab1);
-
         TabHost.TabSpec tab2 = tabHost.newTabSpec("tab2"); // id
         tab2.setIndicator("",getResources().getDrawable(R.drawable.cay));
         tab2.setContent(R.id.tab2);
         tabHost.addTab(tab2);
-
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -285,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addEvents() {
         btnEditUser.setOnClickListener(v ->{
             pickImageFromGallery();
-
         });
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -300,9 +300,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
-
     }
-
     private void pickImageFromGallery() {
         Intent i = new Intent(
                 Intent.ACTION_PICK,
@@ -386,10 +384,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.mnSetting:
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
     private void xuLyGui() {
 //        MyFunction.makeToast(MainActivity.this,"Demo");
        intent = new Intent(MainActivity.this, ThongTin.class);
@@ -552,6 +548,7 @@ private void makeCircle(LatLng lat){
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        auth =  FirebaseAuth.getInstance();
 
         if (id == R.id.nav_user_setting) {
             changeUserSetting();
@@ -564,7 +561,7 @@ private void makeCircle(LatLng lat){
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_sign_out) {
-            FirebaseAuth.getInstance().signOut();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -577,7 +574,7 @@ private void makeCircle(LatLng lat){
         startActivity(intent);
     }
 
-    private void changeLanguageSetting() {
+        private void changeLanguageSetting() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClassName("com.android.settings", "com.android.settings.LanguageSettings");
         startActivity(intent);

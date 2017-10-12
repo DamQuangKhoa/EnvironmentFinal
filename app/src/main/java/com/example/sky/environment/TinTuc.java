@@ -79,13 +79,11 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
                     startActivity(intent);
                     return true;
                 case R.id.navigation_dashboard:
-//                    Log.e("AAA",loca+"");
                     return true;
                 case R.id.navigation_notifications:
                     intent = new Intent(TinTuc.this,ThongTin.class);
                     GPSTracker gps = new GPSTracker(TinTuc.this);
                     Location loc=gps.getLocation();
-//                    Log.e("AAA",loca+"");
                     if(loc != null) {
                         intent.putExtra(Config.LAT, loc.getLatitude());
                         intent.putExtra(Config.LONG, loc.getLongitude());

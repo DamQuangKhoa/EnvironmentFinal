@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
@@ -24,22 +25,13 @@ public class Future extends AppCompatActivity {
                     return true;
                 case R.id.navigation_dashboard:
                     intent = new Intent(Future.this,TinTuc.class);
-//                    Log.e("AAA",loca+"");
                     startActivity(intent);
                     return true;
                 case R.id.navigation_notifications:
                     intent = new Intent(Future.this,ThongTin.class);
-//                    Log.e("AAA",loca+"");
-//                    if(location != null) {
-//                    }
-//                    else{
-//                        gps = new GPSTracker(Future.this);
-//                        gps.showSettingsAlert();
-//                    }
-//                    return true;
+                    return true;
                 case R.id.menu:
-                    intent = new Intent(Future.this,TinTuc.class);
-//                    Log.e("AAA",loca+"");
+                    intent = new Intent(Future.this,Future.class);
                     startActivity(intent);
                     return true;
             }
@@ -53,5 +45,7 @@ public class Future extends AppCompatActivity {
         setContentView(R.layout.activity_future);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 }

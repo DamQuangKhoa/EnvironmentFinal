@@ -65,7 +65,7 @@ public class ListViewAdapter extends ArrayAdapter implements Filterable {
 
         for (int i = 0; i < diadiem.getMucDoInt(); i++) {
             ImageView imageView = new ImageView(context);
-            imageView.setImageResource(R.mipmap.ic_star);
+//            imageView.setImageResource(R.mipmap.ic_star);
             imageView.setLayoutParams(layoutParams); // hien len button
             linear.addView(imageView);
         }

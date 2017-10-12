@@ -58,7 +58,7 @@ public void updateData(List<DiaDiem>  list){
         );
         for(int i = 0; i< dd.getMucDoInt(); i++){
             ImageView imageView = new ImageView(mContext);
-            imageView.setImageResource(R.mipmap.ic_star);
+//            imageView.setImageResource(R.mipmap.ic_star);
             imageView.setLayoutParams(layoutParams); // hien len button
             holder.linear.addView(imageView);
         }

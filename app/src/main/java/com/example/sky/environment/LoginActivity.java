@@ -63,6 +63,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnGoogle = (Button) findViewById(R.id.btnGoogle);
 
+
+
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
@@ -129,6 +131,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void loginGoogle() {
+        progressBar.setVisibility(View.VISIBLE);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -156,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Uri personPhoto = acct.getPhotoUrl();
                 String personPhoneURL = acct.getPhotoUrl().toString();
                 Log.e("Firebase",personName+"_"+personEmail+"_"+personId+"_"+personPhoneURL);
-                Toast.makeText(this,personName+"_"+personEmail+"_"+personId+"_"+personPhoneURL , Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,personName+"_"+personEmail+"_"+personId+"_"+personPhoneURL , Toast.LENGTH_LONG).show();
                 //                User user = new User();
                 //                user.setUsername(personName);
                 //                user.setEmail(personEmail);
@@ -195,6 +198,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }else{
                             Toast.makeText(LoginActivity.this, "Authentication pass.",
                                     Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                             Intent intent = new Intent(LoginActivity.this, Start.class);
                             startActivity(intent);
                             LoginActivity.this.finish();
@@ -202,8 +206,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
-
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 

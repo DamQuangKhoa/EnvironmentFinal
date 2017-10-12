@@ -27,9 +27,9 @@ public class Future extends AppCompatActivity {
                     intent = new Intent(Future.this,TinTuc.class);
                     startActivity(intent);
                     return true;
-                case R.id.navigation_notifications:
-                    intent = new Intent(Future.this,ThongTin.class);
-                    return true;
+//                case R.id.navigation_notifications:
+//                    intent = new Intent(Future.this,ThongTin.class);
+//                    return true;
                 case R.id.menu:
                     intent = new Intent(Future.this,Future.class);
                     startActivity(intent);

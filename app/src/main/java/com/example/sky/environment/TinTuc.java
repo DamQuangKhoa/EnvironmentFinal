@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -80,16 +79,7 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
                     return true;
                 case R.id.navigation_dashboard:
                     return true;
-                case R.id.navigation_notifications:
-                    intent = new Intent(TinTuc.this,ThongTin.class);
-                    GPSTracker gps = new GPSTracker(TinTuc.this);
-                    Location loc=gps.getLocation();
-                    if(loc != null) {
-                        intent.putExtra(Config.LAT, loc.getLatitude());
-                        intent.putExtra(Config.LONG, loc.getLongitude());
-                        startActivity(intent);
-                    }
-                    return true;
+
             }
             return false;
         }
@@ -151,8 +141,17 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+                Intent intent = new Intent(TinTuc.this,ThongTin.class);
+                GPSTracker gps = new GPSTracker(TinTuc.this);
+                Location loc=gps.getLocation();
+                if(loc != null) {
+                    intent.putExtra(Config.LAT, loc.getLatitude());
+                    intent.putExtra(Config.LONG, loc.getLongitude());
+                    startActivity(intent);
+                }
             }
         });
 

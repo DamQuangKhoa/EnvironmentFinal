@@ -2,6 +2,8 @@ package com.example.sky.environment;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -23,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -70,6 +73,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +82,7 @@ import java.util.Map;
 
 import adapter.MapAdapter;
 import controller.MyFunction;
+import controller.TinyDB;
 import map.GPSTracker;
 import model.Config;
 import model.DiaDiem;
@@ -105,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ImageButton btnEditUser;
     boolean xemTinTuc= false;
     FirebaseUser user;
+    Context mContext = MainActivity.this;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -159,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main2);
         addControls();
         addEvents();
-//        initLocation();
+        initLocation();
     }
 
     private void initLocation() {
@@ -192,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         tab2.setIndicator("",getResources().getDrawable(R.drawable.cay));
         tab2.setContent(R.id.tab2);
         tabHost.addTab(tab2);
+
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -356,8 +363,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onQueryTextSubmit(String query)
             {
-                Log.e("searchview",query);
-//                sendAddressToWeb(query);
+                if(MyFunction.testString(query)) {
+//                    sendAddressToWeb(query);
+                    saveAddressToSharePre(query);
+                    return true;
+                }
+                else{
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext, R.style.MyDialogTheme);
+                    // Setting Dialog Title
+                    alertDialog.setTitle(R.string.Note);
+                    // Setting Dialog Message
+                    alertDialog.setMessage("Please enter greater than 6 character ");
+                    // Setting Icon to Dialog
+                    alertDialog.setIcon(R.mipmap.ic_maybay);
+
+                    // On pressing Settings button
+                    alertDialog.setPositiveButton(R.string.queston_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    // on pressing cancel button
+                    alertDialog.setNegativeButton(R.string.question_No, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+
+                    // Showing Alert Message
+            }
                 return false;
             }
             @Override
@@ -370,6 +405,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return super.onCreateOptionsMenu(menu);
     }
+
+    private void saveAddressToSharePre(String query) {
+        TinyDB tinydb = new TinyDB(MainActivity.this);
+        ArrayList<String> list =tinydb.getListString("location") == null? new ArrayList<>(): tinydb.getListString("location");
+        if(!list.contains(query)) {
+            list.add(query);
+        }
+        tinydb.putListString("location",list);
+        Log.e("Array", Arrays.toString(list.toArray()));
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.mncontact:
@@ -423,6 +469,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onResponse(String response) {
 //                MyFunction.makeToastTest(MainActivity.this,"Kiem Tra",response);
+                Log.e("SSA",response);
                 xuLySSA(response);
                 khoanhVungDiaDiem(dsDiaDiem);
             }
@@ -557,10 +604,7 @@ private void makeCircle(LatLng lat){
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_sign_out) {
-
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

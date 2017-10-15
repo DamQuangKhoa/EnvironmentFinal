@@ -1,8 +1,10 @@
 package com.example.sky.environment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -166,7 +168,6 @@ public class ChangeUserInformation extends AppCompatActivity {
                 }
             }
         });
-
         btnSendResetEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +181,6 @@ public class ChangeUserInformation extends AppCompatActivity {
                 remove.setVisibility(View.GONE);
             }
         });
-
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,51 +205,73 @@ public class ChangeUserInformation extends AppCompatActivity {
                 }
             }
         });
-
         btnRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 if (user != null) {
-                    user.delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ChangeUserInformation.this, getString(R.string.delete_User_success), Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(ChangeUserInformation.this, MainActivity.class));
-                                        finish();
-                                        progressBar.setVisibility(View.GONE);
-                                    } else {
-                                        Toast.makeText(ChangeUserInformation.this,getString(R.string.delete_User_fail), Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
+                    showSettingsAlertDelete(user);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
-
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signOut();
             }
         });
-
     }
+    public void showSettingsAlertDelete(FirebaseUser user){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ChangeUserInformation.this,R.style.MyDialogTheme);
 
+        // Setting Dialog Title
+        alertDialog.setTitle(R.string.Note);
+        // Setting Dialog Message
+        alertDialog.setMessage(R.string.question_delete_user);
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.mipmap.ic_maybay);
+
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(R.string.queston_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                user.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ChangeUserInformation.this, getString(R.string.delete_User_success), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ChangeUserInformation.this, MainActivity.class));
+                                    finish();
+                                    progressBar.setVisibility(View.GONE);
+                                } else {
+                                    Toast.makeText(ChangeUserInformation.this,getString(R.string.delete_User_fail), Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+            }
+        });
+        // on pressing cancel button
+        alertDialog.setNegativeButton(R.string.question_No, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
     //sign out method
     public void signOut() {
         auth.signOut();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
     }
-
     @Override
     public void onStart() {
         super.onStart();

@@ -42,7 +42,6 @@ public class GPSTracker extends Service implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
-    private static GPSTracker instance;
 
     public GPSTracker(Context mContext) {
         this.mContext = mContext;

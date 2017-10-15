@@ -3,12 +3,11 @@ package com.example.sky.environment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +21,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -33,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,14 +47,13 @@ import java.util.Map;
 
 import adapter.DiaDiemAdapter;
 import controller.RecyclerViewClickListener;
-import map.GPSTracker;
 import model.Config;
 import model.DiaDiem;
 
 import static com.example.sky.environment.R.id.lvKetXe;
 import static com.example.sky.environment.R.id.lvONhiem;
 
-public class TinTuc extends AppCompatActivity {
+public class TinTuc extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 RecyclerView.LayoutManager mLayoutManager1,mLayoutManager2;
     RecyclerView recyclerViewKetXe,recyclerViewONhiem;
 List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
@@ -78,8 +76,13 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
                     startActivity(intent);
                     return true;
                 case R.id.navigation_dashboard:
+                    intent = new Intent(TinTuc.this,TinTuc.class);
+                    startActivity(intent);
                     return true;
-
+                case R.id.menu:
+                    intent = new Intent(TinTuc.this,Future.class);
+                    startActivity(intent);
+                    return true;
             }
             return false;
         }
@@ -137,23 +140,9 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
 
-                Intent intent = new Intent(TinTuc.this,ThongTin.class);
-                GPSTracker gps = new GPSTracker(TinTuc.this);
-                Location loc=gps.getLocation();
-                if(loc != null) {
-                    intent.putExtra(Config.LAT, loc.getLatitude());
-                    intent.putExtra(Config.LONG, loc.getLongitude());
-                    startActivity(intent);
-                }
-            }
-        });
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -161,7 +150,9 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -340,5 +331,48 @@ public void changeMapToList(){
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         return decodedByte;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        FirebaseAuth auth =  FirebaseAuth.getInstance();
+
+        if (id == R.id.nav_user_setting) {
+            changeUserSetting();
+            // Handle the camera action
+        }  else if (id == R.id.nav_change_language) {
+            changeLanguageSetting();
+
+        } else if (id == R.id.nav_grade) {
+
+        } else if (id == R.id.nav_share) {
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void changeUserSetting() {
+        Intent intent = new Intent(getApplicationContext(),ChangeUserInformation.class);
+        startActivity(intent);
+    }
+
+    private void changeLanguageSetting() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName("com.android.settings", "com.android.settings.LanguageSettings");
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

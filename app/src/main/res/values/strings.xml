@@ -306,4 +306,11 @@
     <string name="SSA_Error">Loi Xu Ly SSA</string>
     <string name="nav_history">History</string>
     <string name="web_client_id">Include your web client id here</string>
+    <string name="nav_menu">Menu</string>
+    <string name="nav_news">News</string>
+    <string name="nav_map">Map</string>
+    <string name="queston_yes">Yes</string>
+    <string name="question_No">No</string>
+    <string name="Note">Note</string>
+    <string name="question_delete_user">Are you really want to delete this user?</string>
 </resources>

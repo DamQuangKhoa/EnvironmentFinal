@@ -5,15 +5,15 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@mipmap/ic_choice"
-        android:title="@string/app_name" />
+        android:title="@string/nav_map" />
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@mipmap/ic_nav_location"
-        android:title="@string/menu_setting" />
+        android:title="@string/nav_news" />
     <item
         android:id="@+id/menu"
         android:icon="@mipmap/ic_destop"
-        android:title="@string/menu_contact" />
+        android:title="@string/nav_menu" />
 
 </menu>

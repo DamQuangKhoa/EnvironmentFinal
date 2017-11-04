@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,18 +41,20 @@
             android:name=".ThongTin"
             android:label="@string/title_activity_maps" />
         <activity android:name=".TinTuc" />
-        <activity android:name=".GioiThieu" />
+        <activity android:name=".LoginActivity" />
 
         <!-- <meta-data -->
         <!-- android:name="com.google.android.geo.API_KEY" -->
         <!-- android:value="AIzaSyAPeodkcrzikkpyjIp7zoWKXPpVMg7TPMM" /> -->
 
         <activity android:name=".Future" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".PropertyAnimatedActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".ChangeUserInformation" />
-        <activity android:name=".Start"></activity>
+        <activity android:name=".Start" />
+            <activity android:name=".History"></activity>
+        <activity android:name=".GioiThieu"> </activity>
     </application>
 
 </manifest>

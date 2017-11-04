@@ -1,3 +1,4 @@
+/*
 package adapter;
 
 import android.app.Activity;
@@ -23,9 +24,11 @@ import java.util.List;
 
 import model.DiaDiem;
 
+*/
 /**
  * Created by Sky on 10/07/2017.
- */
+ *//*
+
 
 public class ListViewAdapter extends ArrayAdapter implements Filterable {
     @NonNull
@@ -48,11 +51,11 @@ public class ListViewAdapter extends ArrayAdapter implements Filterable {
         LayoutInflater layoutInflater = this.context.getLayoutInflater();
 
         View view = layoutInflater.inflate(resource, null);
-        LinearLayout linear = (LinearLayout) view.findViewById(R.id.linearStar);
+        LinearLayout linear = (LinearLayout) view.findViewById(R.id.relative);
         DiaDiem diadiem = (DiaDiem) objects.get(position);
         TextView txtDuong = (TextView) view.findViewById(R.id.txtDuong);
-        TextView txtQuan = (TextView) view.findViewById(R.id.txtQuan);
-        TextView txtThoiGian = (TextView) view.findViewById(R.id.txtThoiGian);
+//        TextView txtQuan = (TextView) view.findViewById(R.id.txtQuan);
+//        TextView txtThoiGian = (TextView) view.findViewById(R.id.txtThoiGian);
         ImageView imgHinh = (ImageView) view.findViewById(R.id.imgHinh);
 
 //        imgHinh.setImageResource(R.drawable.duong);
@@ -93,8 +96,8 @@ public class ListViewAdapter extends ArrayAdapter implements Filterable {
         }
 
         txtDuong.setText(diadiem.getTenDuong());
-        txtQuan.setText(diadiem.getKhuVuc());
-        txtThoiGian.setText(diadiem.getThoiGianBatDau());
+//        txtQuan.setText(diadiem.getKhuVuc());
+//        txtThoiGian.setText(diadiem.getThoiGianBatDau());
         return view;
     }
 
@@ -133,4 +136,4 @@ public class ListViewAdapter extends ArrayAdapter implements Filterable {
             }
         }
     }
-}
+}*/

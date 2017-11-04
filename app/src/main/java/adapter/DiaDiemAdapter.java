@@ -1,18 +1,15 @@
 package adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sky.environment.R;
@@ -60,42 +57,36 @@ public void updateData(List<DiaDiem>  list){
             ImageView imageView = new ImageView(mContext);
 //            imageView.setImageResource(R.mipmap.ic_star);
             imageView.setLayoutParams(layoutParams); // hien len button
-            holder.linear.addView(imageView);
+            holder.relate.addView(imageView);
         }
         switch (dd.getMucDoInt()){
             case 1:
-                holder.linear.setBackgroundColor(Color.parseColor("#08f204"));
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#08f204"));
                 break;
             case 2:
-                holder.linear.setBackgroundColor(Color.parseColor("#f7f307"));
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#f7f307"));
                 break;
             case 3:
-                holder.linear.setBackgroundColor(Color.parseColor("#f2aa02"));
-
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#f2aa02"));
                 break;
             case 4:
-                holder.linear.setBackgroundColor(Color.parseColor("#b53203"));
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#b53203"));
                 break;
             case 5:
-                holder.linear.setBackgroundColor(Color.parseColor("#f24102"));
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#f24102"));
                 break;
             default:
-                holder.linear.setBackgroundColor(Color.parseColor("#f24102"));
+                holder.txtMucDo.setBackgroundColor(Color.parseColor("#f24102"));
                 break;
         }
         holder.txtDuong.setText(dd.getTenDuong());
-        holder.txtQuan.setText(dd.getKhuVuc());
-        holder.txtThoiGian.setText(dd.getThoiGianBatDau());
-        Bitmap bm = convertBase64ToBitmap(dd.getHinhAnh());
-        if(bm != null) {
-            holder.imgHinh.setImageBitmap(bm);
-        }
 
-    }
-    private Bitmap convertBase64ToBitmap(String encodedImage){
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
+//        holder.txtQuan.setText(dd.getKhuVuc());
+//        holder.txtThoiGian.setText(dd.getThoiGianBatDau());
+//        Bitmap bm = convertBase64ToBitmap(dd.getHinhAnh());
+//        if(bm != null) {
+//            holder.imgHinh.setImageBitmap(bm);
+//        }
     }
     @Override
     public int getItemCount() {
@@ -119,7 +110,7 @@ public void updateData(List<DiaDiem>  list){
                 results.count = listDiaDiem.size();
             } else {
                 // We perform filtering operation
-                List<DiaDiem> diaDiemList = new ArrayList<DiaDiem>();
+                List<DiaDiem> diaDiemList = new ArrayList<>();
                 for (DiaDiem p : listDiaDiem) {
                     if (p.getTenDuong().toUpperCase()
                             .startsWith(charSequence.toString().toUpperCase())) {
@@ -147,17 +138,20 @@ public void updateData(List<DiaDiem>  list){
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
-        LinearLayout linear;
+//        LinearLayout linear;
+        RelativeLayout relate;
         DiaDiem diadiem;
-        TextView txtDuong,txtQuan,txtThoiGian;
+        TextView txtDuong,txtQuan,txtThoiGian,txtMucDo;
         ImageView imgHinh;
         RecyclerViewClickListener mListener;
+
         public MyViewHolder(View view,RecyclerViewClickListener mListener) {
             super(view);
-           linear = (LinearLayout) view.findViewById(R.id.linearStar);
+           relate = (RelativeLayout) view.findViewById(R.id.relative);
           txtDuong= (TextView) view.findViewById(R.id.txtDuong);
-           txtQuan= (TextView) view.findViewById(R.id.txtQuan);
-          txtThoiGian= (TextView) view.findViewById(R.id.txtThoiGian);
+//           txtQuan= (TextView) view.findViewById(R.id.txtQuan);
+//          txtThoiGian= (TextView) view.findViewById(R.id.txtThoiGian);
+            txtMucDo = (TextView) view.findViewById(R.id.txtMucDo);
             imgHinh = (ImageView) view.findViewById(R.id.imgHinh);
             this.mListener = mListener;
             view.setOnClickListener(this);

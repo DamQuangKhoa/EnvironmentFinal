@@ -1,12 +1,10 @@
 package com.example.sky.environment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,28 +62,24 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
     String dateCurrent="";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Intent intent;
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    intent = new Intent(TinTuc.this,MainActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_dashboard:
-                    intent = new Intent(TinTuc.this,TinTuc.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.menu:
-                    intent = new Intent(TinTuc.this,Future.class);
-                    startActivity(intent);
-                    return true;
-            }
-            return false;
-        }
-    };
+            = item -> { // item == menuItem
+                Intent intent;
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        intent = new Intent(TinTuc.this,MainActivity.class);
+                        startActivity(intent);
+                        return true;
+                    case R.id.navigation_dashboard:
+                        intent = new Intent(TinTuc.this,TinTuc.class);
+                        startActivity(intent);
+                        return true;
+                    case R.id.menu:
+                        intent = new Intent(TinTuc.this,Future.class);
+                        startActivity(intent);
+                        return true;
+                }
+                return false;
+            };
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tintuc_main2);
@@ -98,12 +91,12 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         TabHost tabHost = (TabHost) findViewById(R.id.tabHost2);
         tabHost.setup();
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tab2_1");
-        tab1.setIndicator("",getResources().getDrawable(R.drawable.lua));
+        tab1.setIndicator("", ContextCompat.getDrawable(this,R.drawable.lua));
         tab1.setContent(R.id.tab2_1);
         tabHost.addTab(tab1);
 
         TabHost.TabSpec tab2 = tabHost.newTabSpec("tab2_2");
-        tab2.setIndicator("",getResources().getDrawable(R.drawable.cay));
+        tab2.setIndicator("",ContextCompat.getDrawable(this,R.drawable.cay));
         tab2.setContent(R.id.tab2_2);
         tabHost.addTab(tab2);
 
@@ -126,10 +119,9 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         ketXeAdapter = new DiaDiemAdapter(TinTuc.this,listener);
         oNhiemAdapter= new DiaDiemAdapter(TinTuc.this,listener);
 
-//        taoDsDiaDiemTest();
         recyclerViewKetXe.setAdapter(ketXeAdapter);
         recyclerViewONhiem.setAdapter(oNhiemAdapter);
-
+dsKetXe.add(new DiaDiem("Ngã Tư Thủ Đức","B","1/1/2010",50,50,3));
         ketXeAdapter.updateData(dsKetXe);
         oNhiemAdapter.updateData(dsONhiem);
 
@@ -147,7 +139,7 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
 
@@ -158,10 +150,9 @@ List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
 
     private void taoDsDiaDiemTest() {
         for (int i=0;i<10;i++){
-//            DiaDiem dd = new DiaDiem("A","2017/7/15","Kẹt Xe",5,3,0,50,50);
-//            dsKetXe.add(dd);
+            DiaDiem dd = new DiaDiem("A"+i,"B","1/1/2010",50,50,3);
+            dsKetXe.add(dd);
         }
-        ketXeAdapter.notifyDataSetChanged();
     }
 
     private void addEvents() {
@@ -223,7 +214,6 @@ private void updateData(){
 
     public void getData(String date) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -327,13 +317,6 @@ public void changeMapToList(){
         }
         return mapDiaDiem;
     }
-    private Bitmap convertBase64ToBitmap(String encodedImage){
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();

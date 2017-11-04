@@ -1,5 +1,4 @@
 <resources>
-    <string name="Environment">Environment</string>
 
     <string-array name="mucdo">
         <item>Nghiêm Trọng</item>
@@ -11,15 +10,6 @@
 
     </string-array>
 
-    <string-array name="mapTpe">
-        <item> Roadmap </item>
-        <item> Satellite  </item>
-        <item> Hybrid  </item>
-        <item> Terrain  </item>
-        <item> None  </item>
-
-
-    </string-array>
     <string-array name="quan">
         <item>Quận 1</item>
         <item>Quận 12</item>
@@ -87,7 +77,6 @@
         <item>Hồ Hảo Hớn</item>
 
         <item>Hồ Huấn Nghiệp</item>
-        <item></item>
         <item>Hồ Tùng Mậu</item>
 
 
@@ -116,7 +105,6 @@
 
         <item>Lưu Văn Lang</item>
         <item>Lý Tự Trọng</item>
-        <item></item>
         <item>Lý Văn Phức</item>
         <item>Mã Lộ</item>
         <item>Mạc Đĩnh Chi</item>
@@ -143,7 +131,6 @@
         <item>Nguyễn Phi Khanh</item>
         <item>Nguyễn Thái Bình</item>
         <item>Bà Huyện Thanh Quan</item>
-        <item></item>
         <item>Bàn Cờ</item>
         <item>Cách Mạng Tháng Tám</item>
         <item>Cao Thắng</item>
@@ -220,32 +207,8 @@
 
     =======
     <string name="app_name">Final</string>
-    <string name="forget_password"><u>Forgot Password</u></string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="title_activity_report">Report</string>
-    <string name="your_password">Your Password</string>
-    <string name="reset_password">Reset Password</string>
-    <string name="your_username">Your Username</string>
-    <string name="log_in">Log In</string>
-    <string name="sign_in">Sign In</string>
-    <string name="repeat_password">Repeat Password</string>
     <string name="email">Email</string>
-    <string name="accepting_our_licences">Accepting our licences</string>
-    <string name="infomation">Infomation</string>
-    <string name="person">Person</string>
-    <string name="news">News</string>
-    <string name="post">Post</string>
-    <string name="hello_world">Hello World</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -258,15 +221,11 @@
     <string name="new_pass">New Password</string>
     <string name="input_email">Enter email address!</string>
     <string name="input_password">Enter password!</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="title_activity_login">Sign in</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="hint_name">Fullname</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_register">Not a member? Get registered now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
-    <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
     <string name="btn_reset_password">Reset Password</string>
     <string name="btn_back"><![CDATA[<< Back]]></string>
@@ -277,17 +236,12 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="sign_up_fail">Sign Up Fail</string>
     <string name="lbl_forgot_password">Forgot password?</string>
-    <string name="send_email_to_change_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions</string>
     <string name="email_send_fail">Send Email Failed</string>
-    <string name="nav_change_email">Change Email</string>
-    <string name="nav_change_password">Change Password</string>
     <string name="nav_change_language">Change Language</string>
     <string name="nav_your_grade">Your Grade</string>
     <string name="group_nav_communicate">Communicate</string>
     <string name="nav_share">Share</string>
-    <string name="nav_sign_out">Sign Out</string>
-    <string name="menu_home">Home</string>
     <string name="menu_setting">setting</string>
     <string name="menu_contact">Contact</string>
     <string name="menu_update">Update</string>
@@ -305,7 +259,6 @@
     <string name="update_email_success">Email address is updated. Please sign in with new email id!</string>
     <string name="SSA_Error">Loi Xu Ly SSA</string>
     <string name="nav_history">History</string>
-    <string name="web_client_id">Include your web client id here</string>
     <string name="nav_menu">Menu</string>
     <string name="nav_news">News</string>
     <string name="nav_map">Map</string>
@@ -313,4 +266,20 @@
     <string name="question_No">No</string>
     <string name="Note">Note</string>
     <string name="question_delete_user">Are you really want to delete this user?</string>
+    <string name="nav_yourname">Your Name</string>
+    <string name="nav_your_avatar">Change your avatar</string>
+    <string name="nav_your_address">Your Address</string>
+    <string name="welcome">Welcome to my app</string>
+
+    <string name="wheel">Steering Wheel</string>
+    <string name="ground">The Ground</string>
+    <string name="window">Window Frame</string>
+    <string name="sun">The Sun</string>
+    <string name="cloud">A Cloud</string>
+    <string name="your_history">Your History</string>
+    <string name="start_on_kx">Điểm Kẹt Xe-Ô Nhiễm</string>
+    <string name="start_map">Bản Đồ</string>
+    <string name="start_sendData">Gửi Thông Tin</string>
+    <string name="start_grade">Điểm Thưởng</string>
+    <string name="start_exit">Thoát</string>
 </resources>

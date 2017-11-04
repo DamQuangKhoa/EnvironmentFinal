@@ -5,39 +5,54 @@
     android:layout_height="@dimen/nav_header_height"
     android:background="#61fc00"
     android:gravity="bottom"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:elevation="12dp"
-        android:id="@+id/view2"
-        app:cardCornerRadius="40dp"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9">
-        <ImageView
-            android:layout_height="80dp"
-            android:layout_width="match_parent"
-            android:id="@+id/imgUser"
-            app:srcCompat="@mipmap/ic_super"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
-        </ImageView>
+    <LinearLayout
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="12dp"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            app:cardCornerRadius="40dp">
+
+            <ImageView
+                android:contentDescription=""
+                android:id="@+id/imgUser"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@mipmap/ic_super"></ImageView>
+
+        </android.support.v7.widget.CardView>
+
+        <ImageButton
+            android:contentDescription=""
+            android:id="@+id/btnEditUser"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            app:srcCompat="@mipmap/ic_edituser" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="33dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txtUser"
@@ -45,25 +60,51 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:textColor="#161E11"
+            android:textStyle="bold"
             android:gravity="center"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Android Studio"
+            android:text="@string/nav_yourname"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        <ImageButton
-            android:id="@+id/btnEditUser"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@mipmap/ic_edituser" />
+            android:textColor="#161E11"
+            android:textStyle="bold"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="@string/email" />
+
+        <TextView
+            android:id="@+id/txtAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#161E11"
+            android:textStyle="bold"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/nav_your_address" />
+
+        <TextView
+            android:id="@+id/txtGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#161E11"
+            android:textStyle="bold"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="@string/nav_your_grade" />
+
+        <ImageView
+            android:contentDescription=""
+            android:id="@+id/imgRank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@mipmap/ic_rank0" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtMail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="android.studio@android.com" />
 
 </LinearLayout>

@@ -1,104 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginStart="8dp"
+    android:background="@drawable/bg2"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:context="com.example.sky.environment.Start">
 
-    <RelativeLayout
-        android:layout_width="368dp"
-        android:layout_height="551dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/bg2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp">
 
+    <Button
+        android:id="@+id/btnNew"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnMap"
+        android:layout_below="@+id/btnMap"
+        android:layout_marginTop="18dp"
+        android:background="@null"
+        android:drawableStart="@mipmap/ic_new"
+        android:text="@string/start_on_kx"
+        android:textAlignment="viewStart"
+        android:textColor="#04fdf1"
+        android:textStyle="bold"
+        android:typeface="normal" />
 
-        <Button
-            android:id="@+id/btnNew"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/btnMap"
-            android:layout_below="@+id/btnMap"
-            android:layout_marginTop="18dp"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ic_new"
-            android:text="Điểm Kẹt Xe-Ô Nhiễm"
-            android:textAlignment="viewStart"
-            android:textColor="#04fdf1"
-            android:textStyle="bold"
-            android:typeface="normal" />
+    <Button
+        android:id="@+id/btnMap"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:background="@null"
+        android:drawableStart="@mipmap/ic_map"
+        android:text="@string/start_map"
+        android:textAlignment="viewStart"
+        android:textColor="#04fdf1"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnMap"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ic_map"
-            android:text="Bản Đồ"
-            android:textAlignment="viewStart"
-            android:textColor="#04fdf1"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/btnSendData"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnNew"
+        android:layout_below="@+id/btnNew"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        android:drawableStart="@mipmap/ic_maybay"
+        android:text="@string/start_sendData"
+        android:textAlignment="viewStart"
+        android:textColor="#04fdf1"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnSendData"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/btnNew"
-            android:layout_below="@+id/btnNew"
-            android:layout_marginTop="24dp"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ic_maybay"
-            android:text="Gửi Thông Tin"
-            android:textAlignment="viewStart"
-            android:textColor="#04fdf1"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/btnGift"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnSendData"
+        android:layout_below="@+id/btnSendData"
+        android:layout_marginTop="22dp"
+        android:background="@null"
+        android:drawableStart="@mipmap/ic_choice"
+        android:text="@string/start_grade"
+        android:textAlignment="viewStart"
+        android:textColor="#04fdf1"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnGift"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/btnSendData"
-            android:layout_below="@+id/btnSendData"
-            android:layout_marginTop="22dp"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ic_choice"
-            android:text="Điểm Thưởng"
-            android:textAlignment="viewStart"
-            android:textColor="#04fdf1"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btnGift"
+        android:layout_below="@+id/btnGift"
+        android:layout_marginTop="15dp"
+        android:background="@null"
+        android:drawableStart="@mipmap/ic_exit"
+        android:text="@string/start_exit"
+        android:textAlignment="viewStart"
+        android:textColor="#04fdf1"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnExit"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/btnGift"
-            android:layout_below="@+id/btnGift"
-            android:layout_marginTop="15dp"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ic_exit"
-            android:text="Thoát"
-            android:textAlignment="viewStart"
-            android:textColor="#04fdf1"
-            android:textStyle="bold" />
+    <ImageView
+        android:contentDescription=""
+        android:id="@+id/imageView2"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        app:srcCompat="@mipmap/ic_nonglam" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:textAlignment="viewStart"
-            android:textStyle="bold"
-            app:srcCompat="@mipmap/ic_nonglam" />
-
-    </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

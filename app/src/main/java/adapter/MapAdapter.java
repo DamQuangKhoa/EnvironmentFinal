@@ -20,10 +20,26 @@ import model.DiaDiem;
  */
 
 public class MapAdapter implements GoogleMap.InfoWindowAdapter{
-    Activity context;
-    DiaDiem diaDiem;
+    private Activity context;
+    private DiaDiem diaDiem;
     public MapAdapter(Activity context, DiaDiem diaDiem) {
         this.context = context;
+        this.diaDiem = diaDiem;
+    }
+
+    public Activity getContext() {
+        return context;
+    }
+
+    public void setContext(Activity context) {
+        this.context = context;
+    }
+
+    public DiaDiem getDiaDiem() {
+        return diaDiem;
+    }
+
+    public void setDiaDiem(DiaDiem diaDiem) {
         this.diaDiem = diaDiem;
     }
 
@@ -38,9 +54,15 @@ public class MapAdapter implements GoogleMap.InfoWindowAdapter{
         View view= inflater.inflate(R.layout.item_map,null);
         ImageView imgHinhHienThi = (ImageView) view.findViewById(R.id.imgHinhHienThi);
         TextView txtDuongHienThi = (TextView) view.findViewById(R.id.txtDuongHienThi);
-
-        imgHinhHienThi.setImageBitmap(convertBase64ToBitmap(diaDiem.getHinhAnh()));
+        String hinhanh;
+        if((hinhanh=diaDiem.getHinhAnh())!= null){
+        imgHinhHienThi.setImageBitmap(convertBase64ToBitmap(hinhanh));}
+        else {
+            imgHinhHienThi.setImageResource(R.drawable.ketxe);
+        }
         txtDuongHienThi.setText(diaDiem.getTenDuong());
+
+
         return view;
     }
     private Bitmap convertBase64ToBitmap(String encodedImage){

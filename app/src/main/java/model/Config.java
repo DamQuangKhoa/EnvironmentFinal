@@ -2,9 +2,10 @@ package model;
 
 public class Config {
 
-//    public static final String URL="http://environmen.azurewebsites.net/";
-//    public static final String URL="http://52.187.4.173:8080/Environment/default.jsp";
-    public static final String URL="http://environmen.azurewebsites.net/";
+    public static final String URL="http://52.187.4.173:8080/Environment/index.jsp";
+//    public static final String URL="http://192.168.56.1:8080/WebServiceDM/index.jsp";
+//    public static final String URL="http://192.168.114.119:8080/WebServiceDM/index.jsp";
+    public static final String listHistory="history",USER="user";
     public static final String TENDUONG= "duong",KHUVUC="KV",MUCDO="MD"
             ,LOAI="Loai",TIME="time",LAT="lat",LONG="long",HINHANH="hinhanh";
     public static final String ACTION="action",CSD="Clent-send-data"

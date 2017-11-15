@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TabHost tabHost;
     String[] dsTenDuong;
     ArrayAdapter<String> tenDuongAdapter;
-    ArrayAdapter<String> mapTypeAdapter;
     ProgressDialog progressDialog;
     LatLng loca;
     Intent intent;
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     FirebaseUser user;
     TinyDB tinydb;
     Context mContext = MainActivity.this;
+    Calendar calendar = Calendar.getInstance();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -148,11 +148,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main2);
         addControls();
         addEvents();
-        initLocation();
     }
 
     private void initLocation() {
-//        address=getAddress(location);
+        address=getAddress(loc);
         sendAddressToWeb(Config.currentAddress);
 
     }
@@ -218,18 +217,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtra(Config.LAT, loc.getLatitude());
                     intent.putExtra(Config.LONG, loc.getLongitude());
                     startActivity(intent);
-                } else {
-
-                    gps.showSettingsAlert();
                 }
             }
         });
-        intent = getIntent();
+       /* intent = getIntent();
 
         if ((address = intent.getStringExtra(Config.TENDUONG)) != null) {
             sendAddressToWeb(address);
-            Log.e("SendToWeb", address);
-        }
+        }*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -291,16 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000L, 10F, this);
             }
-            else
-            {
-                //Show an error dialog that GPS is disabled.
-                gps.showSettingsAlert();
-            }
-        }
-        else
-        {
-            gps.showSettingsAlert();
-
         }
     }
 
@@ -442,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.mncontact:
                 break;
             case R.id.mnUpdate:
+                if(loc !=null)initLocation();
                 break;
             case R.id.mnSearch:
                 break;
@@ -474,12 +460,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onMapLoaded() {
-
-                hienThiDiaDiem();
                 progressDialog.dismiss();
-                if(loca == null) {
-                    gps.showSettingsAlert();
-                }
+                Intent intent= getIntent();
+                DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
+                if(dd != null)hienThiDiaDiem(dd);
+                else if(loc !=null) initLocation();
+
             }
         });
     }
@@ -489,7 +475,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 Log.e("SSA",response);
                 xuLySSA(response);
                 khoanhVungDiaDiem(dsDiaDiem);
@@ -510,8 +495,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Map<String,String>  params = new HashMap<>();
                 params.put(Config.ACTION,Config.CSA);
                 params.put(Config.TENDUONG,address);
-//                params.put(Config.TIME,sdf1.format(calendar.getTime()));
-                params.put(Config.TIME,Config.currentTime);
+                params.put(Config.TIME,sdf1.format(calendar.getTime()));
+//                params.put(Config.TIME,Config.currentTime);
                 return params;
             }
         };
@@ -585,12 +570,9 @@ private void makeCircle(LatLng lat){
     optionCircle.center(lat).radius(50);
     Circle cir=mMap.addCircle(optionCircle);
     cir.setStrokeColor(Color.GREEN);
-    cir.setFillColor(Color.RED);
 }
-    private void hienThiDiaDiem(){
-        Intent intent= getIntent();
-        DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
-        if(dd != null){
+    private void hienThiDiaDiem(DiaDiem dd){
+
             xemTinTuc = true;
             sendAddressToWeb(dd.getTenDuong());
             LatLng sydney = new LatLng(dd.getLat(), dd.getLon());
@@ -605,9 +587,8 @@ private void makeCircle(LatLng lat){
 //        Toast.makeText(MainActivity.this,dd.getTenDuong(),Toast.LENGTH_LONG).show();
             mMap.setInfoWindowAdapter(new MapAdapter(MainActivity.this, dd));
             marker.setIcon(BitmapDescriptorFactory
-                    .fromResource(R.mipmap.ic_launcher));
+                    .fromResource(R.mipmap.ic_heart));
             marker.showInfoWindow();
-        }
     }
 }
     @SuppressWarnings("StatementWithEmptyBody")
@@ -634,6 +615,9 @@ private void makeCircle(LatLng lat){
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
 
     private void changeUserSetting() {
         Intent intent = new Intent(getApplicationContext(),ChangeUserInformation.class);
@@ -694,33 +678,24 @@ private void makeCircle(LatLng lat){
         @Override
         public boolean onQueryTextSubmit(String query)
         {
-            if(MyFunction.testString(query)) {
+            int erroCode ;
+            if((erroCode=MyFunction.testString(query))== Config.SUCCESS) {
                 sendAddressToWeb(query);
                 saveAddressToSharePre(query);
                 return true;
             }
             else{
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext, R.style.MyDialogTheme);
-                // Setting Dialog Title
-                alertDialog.setTitle(R.string.Note);
-                // Setting Dialog Message
-                alertDialog.setMessage("Please enter greater than 6 character ");
-                // Setting Icon to Dialog
-                alertDialog.setIcon(R.mipmap.ic_maybay);
-
-                // On pressing Settings button
-                alertDialog.setPositiveButton(R.string.queston_yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                // on pressing cancel button
-                alertDialog.setNegativeButton(R.string.question_No, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                switch (erroCode){
+                    case Config.HAVE_NO_WORD:
+                        MyFunction.showDialog(mContext,getString(R.string.input_address));
+                        break;
+                    case Config.HAVE_NUMBER:
+                        MyFunction.showDialog(mContext,getString(R.string.input_not_number));
+                        break;
+                    case Config.HAVE_SPECIAL_CHAR:
+                        MyFunction.showDialog(mContext,getString(R.string.input_not_speacialChar));
+                        break;
+                }
 
                 // Showing Alert Message
         }

@@ -56,7 +56,10 @@ public class MapAdapter implements GoogleMap.InfoWindowAdapter{
         TextView txtDuongHienThi = (TextView) view.findViewById(R.id.txtDuongHienThi);
         String hinhanh;
         if((hinhanh=diaDiem.getHinhAnh())!= null){
-        imgHinhHienThi.setImageBitmap(convertBase64ToBitmap(hinhanh));}
+        imgHinhHienThi.setImageBitmap(convertBase64ToBitmap(hinhanh));
+        imgHinhHienThi.setMaxWidth(150);
+        imgHinhHienThi.setMaxHeight(150);
+        }
         else {
             imgHinhHienThi.setImageResource(R.drawable.ketxe);
         }

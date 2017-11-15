@@ -282,4 +282,7 @@
     <string name="start_sendData">Gửi Thông Tin</string>
     <string name="start_grade">Điểm Thưởng</string>
     <string name="start_exit">Thoát</string>
+    <string name="input_address">Xin Nhap Vao Ten Duong</string>
+    <string name="input_not_speacialChar">Xin nhap vao ten duong khong co ki tu dac biet</string>
+    <string name="input_not_number">Xin nhap vao ten duong khong co so</string>
 </resources>

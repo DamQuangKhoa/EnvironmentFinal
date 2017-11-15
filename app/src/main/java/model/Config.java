@@ -1,7 +1,7 @@
 package model;
 
 public class Config {
-
+    public static final int HAVE_SPECIAL_CHAR=-1,HAVE_NUMBER=-2,SUCCESS=0,HAVE_NO_WORD=-3;
     public static final String URL="http://52.187.4.173:8080/Environment/index.jsp";
 //    public static final String URL="http://192.168.56.1:8080/WebServiceDM/index.jsp";
 //    public static final String URL="http://192.168.114.119:8080/WebServiceDM/index.jsp";
@@ -14,5 +14,6 @@ public class Config {
     public static final String FIRSTNAME="FIRST",SECONDNAME="SECOND",THIRDNAME="Third";
     public static final String sdfDate="yyyy/MM/dd",sdfTime="HH:mm:ss";
     public static final String currentTime = "2017-09-10",currentAddress="150 Hồ Huấn Nghiệp";
-
+    public static final String PATTERN_HAVE_SPECIAL_CHAR= "[$&+,:;=?@#|]"
+            ,PATTERN_HAVE_NUMBER=".*\\d+.*";
 }

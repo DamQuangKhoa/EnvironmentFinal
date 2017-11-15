@@ -51,9 +51,9 @@ import static com.example.sky.environment.R.id.lvKetXe;
 import static com.example.sky.environment.R.id.lvONhiem;
 
 public class TinTuc extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-RecyclerView.LayoutManager mLayoutManager1,mLayoutManager2;
+    RecyclerView.LayoutManager mLayoutManager1,mLayoutManager2;
     RecyclerView recyclerViewKetXe,recyclerViewONhiem;
-List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
+    List<DiaDiem> dsDiaDiem,dsKetXe,dsONhiem;
     DiaDiemAdapter ketXeAdapter,oNhiemAdapter;
     Calendar calendar;
     SimpleDateFormat sdf1;

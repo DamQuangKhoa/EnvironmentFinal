@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        checkMap();
+
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setTitle("Loading Map...");
         progressDialog.setMessage("Vui Lòng Chờ...");
@@ -444,6 +444,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -455,16 +457,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
-//        mMap.setOnMy(this);
+        checkMap();
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
 
             @Override
             public void onMapLoaded() {
-                progressDialog.dismiss();
-                Intent intent= getIntent();
-                DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
-                if(dd != null)hienThiDiaDiem(dd);
-                else if(loc !=null) initLocation();
+                try {
+                    progressDialog.dismiss();
+                    Intent intent= getIntent();
+                    DiaDiem dd = (DiaDiem) intent.getSerializableExtra("DIADIEM");
+                    if(dd != null)hienThiDiaDiem(dd);
+                    else if(loc !=null) initLocation();
+
+                } catch (Exception e){
+                    Toast.makeText(MainActivity.this, "Context: "+e.toString(), Toast.LENGTH_LONG).show();
+                }
+
 
             }
         });

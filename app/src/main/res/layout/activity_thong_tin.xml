@@ -1,206 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg2"
-    >
+    android:weightSum="1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="368dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        android:weightSum="1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardBackgroundColor="#F7F8FA"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_above="@+id/btnGui"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radCurrent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/currently" />
+
+
+                <RadioButton
+                    android:id="@+id/radOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/other" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/txtStreet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nh_p_t_n_duong" />
+
+            <Spinner
+                android:id="@+id/spDuong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoDuong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/city" />
+
+            <Spinner
+                android:id="@+id/spThanhPho"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoTinhThanh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1" />
+
+            <TextView
+                android:id="@+id/txtKhuVuc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nh_p_khu_v_c" />
+
+            <Spinner
+                android:id="@+id/spKhuVuc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/txtLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/locality" />
+
+            <Spinner
+                android:id="@+id/spPhuong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.13"
+                android:text="@string/m_c" />
+
+            <Spinner
+                android:id="@+id/spMucDo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="21dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radKetXe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/k_t_xe" />
+
+
+                <RadioButton
+                    android:id="@+id/radONhiem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/onhie_m" />
+
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="1">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="7">
 
-                <RadioGroup
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="6"
+                    android:ems="10"
+                    android:inputType="time" />
 
-                    <RadioButton
-                        android:id="@+id/radKetXe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="@string/k_t_xe" />
-
-
-                    <RadioButton
-                        android:id="@+id/radONhiem"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/onhie_m" />
-
-                </RadioGroup>
-
-                <TextView
-                    android:id="@+id/txt"
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/btnTime"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/nh_p_t_n_duong" />
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    app:srcCompat="@mipmap/ic_time" />
+            </LinearLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/autoDuong"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:completionThreshold="1" />
+                    android:layout_weight="6"
+                    android:ems="10"
+                    android:inputType="time" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
+                <ImageButton
+                    android:id="@+id/btnDate"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/nh_p_khu_v_c" />
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    app:srcCompat="@mipmap/ic_calendar" />
 
-                <Spinner
-                    android:id="@+id/spKhuVuc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="28dp"
-                    android:layout_weight="0.13"
-                    android:text="@string/m_c" />
 
-                <Spinner
-                    android:id="@+id/spMucDo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="28dp"
-                    android:text="@string/th_i_gian" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="8">
+
+                <ImageView
+                    android:id="@+id/imgView"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="8.10" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:orientation="horizontal"
-                    android:weightSum="7">
-
-                    <EditText
-                        android:id="@+id/txtTime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="6"
-                        android:ems="10"
-                        android:inputType="time" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/btnTime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
+                        android:id="@+id/btnTakePic"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:background="@null"
-                        app:srcCompat="@mipmap/ic_time" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="28dp"
-                    android:text="@string/ng_y_th_ng" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <EditText
-                        android:id="@+id/txtDate"
-                        android:layout_width="0dp"
-                        android:layout_height="41dp"
-                        android:layout_weight="6"
-                        android:ems="10"
-                        android:inputType="time" />
-
-                    <ImageButton
-                        android:id="@+id/btnDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        app:srcCompat="@mipmap/ic_calendar" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="8"
-                    >
-
-                    <ImageView
-                        android:id="@+id/imgView"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="7.00" />
+                        android:paddingTop="15dp"
+                        app:srcCompat="@mipmap/ic_photographer" />
 
                     <ImageButton
                         android:id="@+id/btnUpload"
-                        android:layout_width="0dp"
+                        android:layout_width="30dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:paddingTop="15dp"
-                        app:srcCompat="@mipmap/ic_photographer" />
+                        app:srcCompat="@mipmap/ic_galery" />
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnGui"
-                    android:layout_width="232dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="36dp"
-                    android:layout_marginLeft="36dp"
-                    android:layout_marginRight="36dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="16dp"
-                    android:background="#00B041"
-                    android:text="Submit"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-
-                    />
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+    <ImageButton
+        android:id="@+id/btnGui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:background="#2ACA71"
+        android:text="Submit"
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/send3" />
+</RelativeLayout>
+
+

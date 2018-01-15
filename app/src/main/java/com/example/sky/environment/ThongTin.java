@@ -10,8 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -21,32 +24,36 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.Config;
 import model.DiaDiemChinh;
@@ -54,40 +61,59 @@ import model.DiaDiemChinh;
 public class ThongTin extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     private final int RESULT_CROP = 400;
-    Button btnGui;
-    EditText txtTime,txtDate;
-    ImageButton btnTime,btnDate,btnUpload;
+    private final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0 ;
+    EditText editTime, editDate;
+    TextView txtLocality,txtKhuVuc;
+    ImageButton btnTime,btnDate,btnUpload,btnGui,btnTakePic;
     ImageView imgView;
+    RadioButton radCurrent,radOther;
     RadioButton radONhiem,radKetXe;
-    AutoCompleteTextView autoDuong;
-    Spinner spKhuVuc,spMucDo;
-    ArrayAdapter<String> duongAdapter,khuVucAdapter,mucDoAdapter;
-    String[] dsDuong;
-    String[] dsKhuVuc;
-    String[] dsMucDo;
+    AutoCompleteTextView autoDuong,autoTinhThanh;
+    Spinner spKhuVuc,spMucDo,spThanhPho,spPhuong,spDuong;
+    ArrayAdapter<String> duongAdapter,khuVucAdapter,mucDoAdapter,thanhPhoAdapter,phuongAdapter;
+    String[] dsDuong,dsKhuVuc,dsMucDo,dsThanhPho,dsPhuong;
     Calendar calendar;
     SimpleDateFormat sdf1,sdf2;
     String base64="";
-    int lastItemKhuVuc =0,lastItemMucDo=0;
+    Geocoder geocoder;
+    static int lastItemKhuVuc =0,lastItemMucDo=0,lastItemDuong=0,lastItemPhuong=0,lastItemTinhThanh=0;
     DiaDiemChinh diaDiem;
-    boolean sendSuccess= false;
+    boolean sendSuccess= false,isOrder=false;
     double lat,lon;
+    private Uri imageUri;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thong_tin);
 
+        xuLyNhanDuLieu();
         addControls();
         addEvents();
-        xuLyNhanDuLieu();
+
 
     }
-
+    public  Address getLocationFromAddress(String strAddress){
+        List<Address> address= null;
+        LatLng p1 = null;
+        Random rd = new Random();
+        try {
+            // May throw an IOException
+            address = geocoder.getFromLocationName(strAddress, 5);
+            if (address == null && address.isEmpty()) {
+                return null;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return address.get(rd.nextInt((address.size())));
+    }
     private void xuLyNhanDuLieu() {
         Intent intent = getIntent();
         lat=intent.getDoubleExtra(Config.LAT,-1);
         lon =intent.getDoubleExtra(Config.LONG,-1);
-        Toast.makeText(this, "Nhan Du Lieu: "+lat+"_"+lon, Toast.LENGTH_SHORT).show();
+
     }
 
     private void addEvents() {
@@ -95,7 +121,94 @@ public class ThongTin extends AppCompatActivity {
         btnDate.setOnClickListener(v -> xuLyDate());
         btnGui.setOnClickListener(v -> xulyGui());
         btnUpload.setOnClickListener(v -> xuLyAnh());
+        radCurrent.setOnClickListener(v-> xuLyCurrentLocal());
+        radOther.setOnClickListener(v-> xuLuOtherLocal());
+        btnTakePic.setOnClickListener(v-> xuLyChupAnh());
     }
+
+    private void xuLyChupAnh() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        imageUri = Uri.fromFile(getOutputMediaFile());
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+    private static File getOutputMediaFile(){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "CameraDemo");
+
+        if (!mediaStorageDir.exists()){
+            if (!mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_"+ timeStamp + ".jpg");
+    }
+
+
+    private void xuLuOtherLocal() {
+        isOrder = true;
+
+        txtKhuVuc.setVisibility(View.GONE);
+        txtLocality.setVisibility(View.GONE);
+        spDuong.setVisibility(View.GONE);
+        autoDuong.setVisibility(View.VISIBLE);
+        autoTinhThanh.setVisibility(View.VISIBLE);
+        spKhuVuc.setVisibility(View.GONE);
+        spPhuong.setVisibility(View.GONE);
+        spThanhPho.setVisibility(View.GONE);
+       dsDuong = getResources().getStringArray(R.array.duong);
+         dsThanhPho = getResources().getStringArray(R.array.tinh);
+
+        duongAdapter=checkAdapter(duongAdapter,dsDuong);
+        thanhPhoAdapter=checkAdapter(thanhPhoAdapter,dsThanhPho);
+        autoDuong.setAdapter(duongAdapter);
+        spMucDo.setAdapter(mucDoAdapter);
+        autoTinhThanh.setAdapter(thanhPhoAdapter);
+    }
+
+    private void xuLyCurrentLocal() {
+        isOrder =false;
+        autoDuong.setVisibility(View.GONE);
+        spDuong.setVisibility(View.VISIBLE);
+        txtLocality.setVisibility(View.VISIBLE);
+        spPhuong.setVisibility(View.VISIBLE);
+        try {
+            List<Address>  addresses = geocoder.getFromLocation(lat, lon, 5); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            int size;
+            if(null != addresses &&(size= addresses.size())>0){
+                dsDuong = new String[size];
+                dsKhuVuc = new String[size];
+                dsPhuong = new String[size];
+                dsThanhPho = new String[size];
+
+                int count=0;
+                for (Address a:
+                        addresses) {
+                    dsDuong[count] =a.getAddressLine(0)==null?" ":a.getAddressLine(0);
+                    dsKhuVuc[count] =a.getSubAdminArea()==null?" ":a.getSubAdminArea();
+                    dsPhuong[count] =a.getLocality()==null?" ":a.getLocality();
+                    dsThanhPho[count] =a.getAdminArea()==null?" ":a.getAdminArea();
+                    count++;
+                    Log.e("address",count+"");
+                }
+                khuVucAdapter=checkAdapter(khuVucAdapter,dsKhuVuc);
+                duongAdapter=checkAdapter(duongAdapter,dsDuong);
+                thanhPhoAdapter=checkAdapter(thanhPhoAdapter,dsThanhPho);
+                phuongAdapter=checkAdapter(phuongAdapter,dsPhuong);
+                spPhuong.setAdapter(phuongAdapter);
+                spThanhPho.setAdapter(thanhPhoAdapter);
+                spKhuVuc.setAdapter(khuVucAdapter);
+                spDuong.setAdapter(duongAdapter);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void xuLyAnh() {
         Intent i = new Intent(
@@ -108,6 +221,7 @@ public class ThongTin extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        ImageView imageView = (ImageView) findViewById(R.id.imgView);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -120,7 +234,6 @@ public class ThongTin extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            ImageView imageView = (ImageView) findViewById(R.id.imgView);
 
             Bitmap bmp = null;
             try {
@@ -144,7 +257,18 @@ public class ThongTin extends AppCompatActivity {
 //                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             }
         }
-    }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE&& resultCode == Activity.RESULT_OK) {
+            //use imageUri here to access the image
+            try {
+                Bitmap bmp = getBitmapFromUri(imageUri);
+                base64 = imgToBase64(bmp);
+                imgView.setImageBitmap(bmp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        }
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -158,14 +282,12 @@ public class ThongTin extends AppCompatActivity {
         matrix.postScale(scaleWidth, scaleHeight);
 
         // recreate the new Bitmap
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
 
-        return resizedBitmap;
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
     private void performCrop(String picUri) {
         try {
             //Start Crop Activity
-
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
             // indicate image type and Uri
             File f = new File(picUri);
@@ -227,26 +349,40 @@ public class ThongTin extends AppCompatActivity {
     }
     private void xulyGui() {
         sendSuccess = false;
-        String tenDuong,khuVuc,mucDo,thoiGian,ngayThang;
-        String ketXe;
-        if(radKetXe.isChecked()){
-        ketXe = "Kẹt Xe";
-        }
-        else {
-            ketXe ="Ô Nhiễm";
-        }
-        tenDuong =  autoDuong.getText().toString();
-        spKhuVuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                lastItemKhuVuc = i;
+            String tenDuong="", khuVuc="", mucDo, thoiGian, ngayThang,phuong="",tinhThanh="";
+            String ketXe;
+            if (radKetXe.isChecked()) {
+                ketXe = "Kẹt Xe";
+            } else {
+                ketXe = "Ô Nhiễm";
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+            spDuong.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    lastItemDuong = i;
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+            spPhuong.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    lastItemPhuong = i;
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+            spKhuVuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    lastItemKhuVuc = i;
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
         spMucDo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -256,25 +392,57 @@ public class ThongTin extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-            khuVuc = dsKhuVuc[lastItemKhuVuc];
-            mucDo = dsMucDo[lastItemMucDo];
-        ngayThang = txtDate.getText().toString();
-        thoiGian  = ngayThang+" " +txtTime.getText().toString();
-//        Log.e("AAA",diaDiem.toString());
-        sendSuccess = kiemTra(tenDuong,khuVuc,mucDo,base64);
-        if(!sendSuccess) {
+        spThanhPho.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                lastItemTinhThanh = i;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        tenDuong =isOrder? autoDuong.getText().toString():dsDuong[lastItemDuong];
+        tinhThanh =isOrder? autoTinhThanh.getText().toString():dsThanhPho[lastItemTinhThanh];
+        khuVuc = dsKhuVuc[lastItemKhuVuc];
+        phuong = dsPhuong[lastItemPhuong];
+        mucDo = dsMucDo[lastItemMucDo];
+
+        ngayThang = editDate.getText().toString();
+        thoiGian = ngayThang + " " + editTime.getText().toString();
+        if(isOrder && !"".equalsIgnoreCase(tenDuong.trim())&& !isContainNumber(tenDuong)){
+            Address adddress=getLocationFromAddress(tenDuong+", "+tinhThanh);
+            if(null != adddress) {
+                tenDuong = adddress.getAddressLine(0);
+                khuVuc = adddress.getSubAdminArea();
+                phuong = adddress.getLocality();
+                tinhThanh = adddress.getAdminArea();
+                lat = adddress.getLatitude();
+                lon = adddress.getLongitude();
+            }
+        }
+        sendSuccess = kiemTra(tenDuong,khuVuc,tinhThanh,phuong);
+        if (!sendSuccess) {
             autoDuong.setBackgroundColor(Color.RED);
-            btnUpload.setBackgroundColor(Color.RED);
-        }
-        else {
-            diaDiem = new DiaDiemChinh(tenDuong,khuVuc,mucDo,ketXe,thoiGian,lat,lon,base64);
-            guiDuLieuWeb(diaDiem);
-        }
+            }
+        else{
+            diaDiem = new DiaDiemChinh(tenDuong, khuVuc, mucDo, ketXe, thoiGian, lat, lon, base64,tinhThanh,phuong);
+                guiDuLieuWeb(diaDiem);
+            Toast.makeText(this, "Gửi Thành Công", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+
+            }
+    }
+    private boolean isContainNumber(String data){
+       return data.matches(".*\\d+.*");
     }
 private boolean kiemTra(String... data){
+    Pattern pattern = Pattern.compile("[a-zA-Z0-9]*");
+    int count =0;
     for (String t :
             data) {
-        if(t == null || t.trim().equals("")){
+        Matcher matcher = pattern.matcher(t);
+        if(t == null || t.trim().equals("") ){
             return false;
         }
     }
@@ -282,18 +450,8 @@ private boolean kiemTra(String... data){
 }
     private void guiDuLieuWeb(DiaDiemChinh diaDiem) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e("AAA",response);
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Loi",error.getMessage());
-                    }
-                }){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, response -> makeLog(response),
+                error -> makeLog(error.getMessage())){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String>  params = new HashMap<>();
@@ -307,30 +465,30 @@ private boolean kiemTra(String... data){
                 params.put(Config.LAT,diaDiem.getLatitude()+"");
                 params.put(Config.LONG,diaDiem.getLongtitude()+"");
                 params.put(Config.HINHANH,diaDiem.getHinhAnh()+"");
-
+                params.put(Config.TINHTHANH,diaDiem.getTinhThanh());
+                params.put(Config.PHUONG,diaDiem.getPhuong());
                 return params;
             }
         };
+        makeLog(stringRequest+"");
         requestQueue.add(stringRequest);
+
     }
 
     private void xuLyDate() {
-        DatePickerDialog.OnDateSetListener callback = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    calendar.set(calendar.YEAR,year);
-                    calendar.set(calendar.MONTH,month);
-                    calendar.set(calendar.DAY_OF_MONTH,day);
-                txtDate.setText(sdf1.format(calendar.getTime()));
-            }
+        DatePickerDialog.OnDateSetListener callback = (datePicker, year, month, day) -> {
+                calendar.set(Calendar.YEAR,year);
+                calendar.set(Calendar.MONTH,month);
+                calendar.set(Calendar.DAY_OF_MONTH,day);
+            editDate.setText(sdf1.format(calendar.getTime()));
         };
 
         DatePickerDialog dpdl = new DatePickerDialog(
                 ThongTin.this,
                 callback,
-                calendar.get(calendar.YEAR),
-                calendar.get(calendar.MONTH),
-                calendar.get(calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         );
         dpdl.show();
     }
@@ -342,7 +500,7 @@ private boolean kiemTra(String... data){
                 calendar.set(Calendar.HOUR,hour-1);
                 calendar.set(Calendar.MINUTE,minute);
 
-                txtTime.setText(sdf2.format(calendar.getTime()));
+                editTime.setText(sdf2.format(calendar.getTime()));
             }
         };
         TimePickerDialog tpdl = new TimePickerDialog(
@@ -357,52 +515,97 @@ private boolean kiemTra(String... data){
 
     private void addControls() {
         calendar = Calendar.getInstance();
-txtTime = (EditText) findViewById(R.id.txtTime);
-        txtDate = (EditText) findViewById(R.id.txtDate);
+        txtLocality = (TextView) findViewById(R.id.txtLocal);
+        txtKhuVuc = (TextView) findViewById(R.id.txtKhuVuc);
+        editTime = (EditText) findViewById(R.id.txtTime);
+        editDate = (EditText) findViewById(R.id.txtDate);
         btnTime = (ImageButton) findViewById(R.id.btnTime);
         btnDate = (ImageButton) findViewById(R.id.btnDate);
-        btnGui = (Button) findViewById(R.id.btnGui);
+        btnGui = (ImageButton) findViewById(R.id.btnGui);
         radKetXe = (RadioButton) findViewById(R.id.radKetXe);
         radONhiem = (RadioButton) findViewById(R.id.radONhiem);
+        radCurrent = (RadioButton) findViewById(R.id.radCurrent);
+        radOther = (RadioButton) findViewById(R.id.radOther);
         autoDuong = (AutoCompleteTextView) findViewById(R.id.autoDuong);
+        autoTinhThanh = (AutoCompleteTextView) findViewById(R.id.autoTinhThanh);
         spKhuVuc = (Spinner) findViewById(R.id.spKhuVuc);
+        spDuong = (Spinner) findViewById(R.id.spDuong);
         spMucDo = (Spinner) findViewById(R.id.spMucDo);
-        dsDuong = getResources().getStringArray(R.array.duong);
-        dsKhuVuc = getResources().getStringArray(R.array.quan);
+        spThanhPho = (Spinner) findViewById(R.id.spThanhPho);
+        spPhuong= (Spinner) findViewById(R.id.spPhuong);
         dsMucDo = getResources().getStringArray(R.array.mucdo);
         btnUpload = (ImageButton) findViewById(R.id.btnUpload);
+        btnTakePic = (ImageButton) findViewById(R.id.btnTakePic);
         imgView = (ImageView) findViewById(R.id.imgView);
-        khuVucAdapter = new ArrayAdapter<String>(
-                ThongTin.this,
-                android.R.layout.simple_list_item_1,
-                dsKhuVuc
-        );
-        duongAdapter = new ArrayAdapter<String>(
-                ThongTin.this,
-                android.R.layout.simple_list_item_1,
-                dsDuong
-        );
-      mucDoAdapter = new ArrayAdapter<String>(
+        geocoder = new Geocoder(this);
+        sdf1 = new SimpleDateFormat(Config.sdfDate);
+        sdf2 = new SimpleDateFormat(Config.sdfTime);
+        mucDoAdapter = new ArrayAdapter<>(
                 ThongTin.this,
                 android.R.layout.simple_list_item_1,
                 dsMucDo
         );
-        khuVucAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-        mucDoAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-        autoDuong.setAdapter(duongAdapter);
-        spKhuVuc.setAdapter(khuVucAdapter);
         spMucDo.setAdapter(mucDoAdapter);
-
-        sdf1 = new SimpleDateFormat(Config.sdfDate);
-        sdf2 = new SimpleDateFormat(Config.sdfTime);
-
-        txtDate.setText(sdf1.format(calendar.getTime()));
-        txtTime.setText(sdf2.format(calendar.getTime()));
+        editDate.setText(sdf1.format(calendar.getTime()));
+        editTime.setText(sdf2.format(calendar.getTime()));
 
 
+            autoDuong.setVisibility(View.GONE);
+            autoTinhThanh.setVisibility(View.GONE);
+            spDuong.setVisibility(View.VISIBLE);
+            txtLocality.setVisibility(View.VISIBLE);
+            spPhuong.setVisibility(View.VISIBLE);
+            try {
+                List<Address>  addresses = geocoder.getFromLocation(lat, lon, 5); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                int size;
+                if(null != addresses &&(size= addresses.size())>0){
+                  dsDuong = new String[size];
+                    dsKhuVuc = new String[size];
+                    dsPhuong = new String[size];
+                     dsThanhPho = new String[size];
 
-//        Log.e("AAA",lat+" "+lon);
+                    int count=0;
+                    for (Address a:
+                            addresses) {
+                        dsDuong[count] =a.getAddressLine(0)==null?" ":a.getAddressLine(0);
+                        dsKhuVuc[count] =a.getSubAdminArea()==null?" ":a.getSubAdminArea();
+                        dsPhuong[count] =a.getLocality()==null?" ":a.getLocality();
+                        dsThanhPho[count] =a.getAdminArea()==null?" ":a.getAdminArea();
+                        count++;
+                    }
+                    khuVucAdapter=checkAdapter(khuVucAdapter,dsKhuVuc);
+                    duongAdapter=checkAdapter(duongAdapter,dsDuong);
+                    thanhPhoAdapter=checkAdapter(thanhPhoAdapter,dsThanhPho);
+                    phuongAdapter=checkAdapter(phuongAdapter,dsPhuong);
 
 
+                    spPhuong.setAdapter(phuongAdapter);
+                    spThanhPho.setAdapter(thanhPhoAdapter);
+                    spKhuVuc.setAdapter(khuVucAdapter);
+                    spDuong.setAdapter(duongAdapter);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+    }
+    public void makeLog(String message){
+        Log.e("THONGTIN",message);
+    }
+    public ArrayAdapter checkAdapter(ArrayAdapter adapt,String[] ds){
+        if(adapt == null) {
+            adapt = new ArrayAdapter<>(
+                    ThongTin.this,
+                    android.R.layout.simple_list_item_1
+            );
+        }
+        else{
+            adapt.clear();
+        }
+        adapt.addAll(Arrays.asList(ds));
+        adapt.notifyDataSetChanged();
+        adapt.setDropDownViewResource(android.R.layout.simple_list_item_1);
+        return adapt;
     }
 }

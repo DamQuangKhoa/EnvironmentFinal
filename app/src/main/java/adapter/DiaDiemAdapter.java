@@ -1,8 +1,12 @@
 package adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +49,13 @@ public void updateData(List<DiaDiem>  list){
                 .inflate(R.layout.item_listview, parent, false);
         return new MyViewHolder(itemView,mListener);
     }
-
+public void makeLog(String message){
+    Log.e("DIADIEMADAPTER",message);
+}
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         DiaDiem dd=listDiaDiem.get(position);
+        makeLog(dd+"");
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -80,13 +87,23 @@ public void updateData(List<DiaDiem>  list){
                 break;
         }
         holder.txtDuong.setText(dd.getTenDuong());
-
-//        holder.txtQuan.setText(dd.getKhuVuc());
-//        holder.txtThoiGian.setText(dd.getThoiGianBatDau());
-//        Bitmap bm = convertBase64ToBitmap(dd.getHinhAnh());
-//        if(bm != null) {
-//            holder.imgHinh.setImageBitmap(bm);
-//        }
+        holder.txtQuan.setText(dd.getKhuVuc());
+        holder.txtThoiGian.setText(dd.getThoiGianBatDau());
+        String hinhanh = dd.getHinhAnh();
+        Bitmap bm;
+       if("".equalsIgnoreCase(hinhanh)){
+           holder.imgHinh.setImageResource(R.drawable.ketxe);
+       }
+       else {
+           if ((bm=convertFrom64ToBit(hinhanh)) != null) {
+               holder.imgHinh.setImageBitmap(bm);
+           }
+       }
+    }
+    public Bitmap convertFrom64ToBit(String base64){
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
     @Override
     public int getItemCount() {

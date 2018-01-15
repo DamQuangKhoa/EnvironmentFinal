@@ -95,7 +95,6 @@ import model.User;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, LocationListener {
     private static int RESULT_LOAD_IMAGE = 1;
-    FloatingActionButton btnXuLy;
     private GoogleMap mMap;
     Geocoder geocoder;
     List<Address> addresses;
@@ -118,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean xemTinTuc = false;
     FirebaseUser user;
     TinyDB tinydb;
+
+
+
     Context mContext = MainActivity.this;
     Calendar calendar = Calendar.getInstance();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -142,6 +144,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void initLocation() {
         address=getAddress(loc);
         sendAddressToWeb(Config.currentAddress);
-
     }
 
     private String getAddress(Location loc) {
@@ -161,18 +165,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String address = "";
         try {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
             address = addresses.get(0).getAddressLine(0);
+            String demo = addresses.get(0).getCountryName();
+            String city = addresses.get(0).getAdminArea(); // ho chi minh - thanh pho
+            String state = addresses.get(0).getLocality(); // phuong
+            String demo3 = addresses.get(0).getFeatureName(); // ten duong
+
+            Log.e("Addresses",address+"____"+demo+"____"+city+"____"+state+"____"+demo3);
 //        Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
-            Toast.makeText(this, "Loi Get Address", Toast.LENGTH_SHORT).show();
-            Log.e("Loi", e.getMessage());
+        makeLog(e.getMessage());
         }
         return address;
     }
 
     ;
-
+public void makeLog(String message){
+    Log.e("MainActivity",message);
+}
     private void addControls() {
         tinydb = new TinyDB(MainActivity.this);
         tabHost = (TabHost) findViewById(R.id.tabHost);
@@ -201,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressDialog.show();
         gps = new GPSTracker(MainActivity.this);
         xemTinTuc = false;
+        checkMap();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -265,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+
         if (locationManager != null) {
             boolean gpsIsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean networkIsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -280,7 +294,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000L, 10F, this);
+                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
             }
             else if(networkIsEnabled)
             {
@@ -457,7 +473,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
-        checkMap();
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
 
             @Override
@@ -478,21 +493,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
     private void sendAddressToWeb(String address){
-        Log.e("SSA",address);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e("SSA",response);
+               makeLog("sendAddressToWeb"+": "+response);
                 xuLySSA(response);
                 khoanhVungDiaDiem(dsDiaDiem);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//            MyFunction.makeToastErro(MainActivity.this,getString(R.string.SSA_Error),error.toString());
-                Toast.makeText(MainActivity.this, "Loi SSA", Toast.LENGTH_SHORT).show();
-                Log.e("SSA",error.toString());
+                makeLog("sendAddressToWeb: "+error.getMessage());
             }
         }){
             @Override
@@ -567,10 +579,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }catch (RuntimeException ex){
             MyFunction.makeToastErro(this,getString(R.string.SSA_Error),ex.getMessage());
-            Log.e("SSA","Loi: "+ ex.getMessage());
+            makeLog( "xuLySSA: "+ex.getMessage());
         }catch (Exception ex){
             MyFunction.makeToastErro(this,getString(R.string.SSA_Error),ex.getMessage());
-            Log.e("SSA","Loi: "+ ex.getMessage());
+            makeLog( "xuLySSA: "+ ex.getMessage());
         }
     }
 private void makeCircle(LatLng lat){

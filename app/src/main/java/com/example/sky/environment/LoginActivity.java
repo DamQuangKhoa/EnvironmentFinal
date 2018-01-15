@@ -1,6 +1,5 @@
 package com.example.sky.environment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,10 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -34,7 +30,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN = 123;
     private GoogleApiClient mGoogleApiClient;
     private Button btnSignup, btnLogin, btnReset,btnGoogle;
-    private final Context mContext = this;
 
 
     @Override
@@ -72,61 +67,45 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnGoogle.setOnClickListener(v -> {
             loginGoogle();
         });
-        btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+        btnSignup.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
+        btnReset.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class)));
+
+        btnLogin.setOnClickListener(v -> {
+            String email = inputEmail.getText().toString();
+            final String password = inputPassword.getText().toString();
+
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(getApplicationContext(),  getString(R.string.input_email), Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(getApplicationContext(),  getString(R.string.input_password), Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = inputEmail.getText().toString();
-                final String password = inputPassword.getText().toString();
+            progressBar.setVisibility(View.VISIBLE);
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(),  getString(R.string.input_email), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(),  getString(R.string.input_password), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                progressBar.setVisibility(View.GONE);
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    if (password.length() < 6) {
-                                        inputPassword.setError(getString(R.string.minimum_password));
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, GioiThieu.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
+            //authenticate user
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(LoginActivity.this, task -> {
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        progressBar.setVisibility(View.GONE);
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                            if (password.length() < 6) {
+                                inputPassword.setError(getString(R.string.minimum_password));
+                            } else {
+                                Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
-                        });
-            }
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, GioiThieu.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
         });
     }
 
@@ -153,21 +132,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 //TO USE
-                String personName = acct.getDisplayName();
-                String personEmail = acct.getEmail();
-                String personId = acct.getId();
-                Uri personPhoto = acct.getPhotoUrl();
-                String personPhoneURL = acct.getPhotoUrl().toString();
-                Log.e("Firebase",personName+"_"+personEmail+"_"+personId+"_"+personPhoneURL);
+                if (acct != null) {
+                    String personName = acct.getDisplayName();
+                    String personEmail = acct.getEmail();
+                    String personId = acct.getId();
+                    Uri personPhoto = acct.getPhotoUrl();
+                    String personPhoneURL = acct.getPhotoUrl().toString();
+
+                    Log.e("Firebase", personName + "_" + personEmail + "_" + personId + "_" + personPhoneURL);
 //                Toast.makeText(this,personName+"_"+personEmail+"_"+personId+"_"+personPhoneURL , Toast.LENGTH_LONG).show();
-                //                User user = new User();
-                //                user.setUsername(personName);
-                //                user.setEmail(personEmail);
+                    //                User user = new User();
+                    //                user.setUsername(personName);
+                    //                user.setEmail(personEmail);
 //                user.setPersonId(personId);
 //                user.setPersonProfileUrl(personPhoneURL);
 //                user.setSignedInWithGoogle(true);
 
-                // updateFirebaseData(user,personEmail);
+                    // updateFirebaseData(user,personEmail);
 //
 //                Gson gson = new GsonBuilder()
 //                        .registerTypeAdapter(Uri.class, new UriSerializer())
@@ -175,9 +156,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 //                String userData = gson.toJson(user);
 //                      EPreferenceManager.getSingleton().setUserdata(getActivity(),userData);
-                firebaseAuthWithGoogle(acct);
-            } else {
-                Toast.makeText(LoginActivity.this,"There was a trouble signing in-Please try again",Toast.LENGTH_SHORT).show();;
+                    firebaseAuthWithGoogle(acct);
+                } else {
+                    Toast.makeText(LoginActivity.this, "There was a trouble signing in-Please try again", Toast.LENGTH_SHORT).show();
+                    ;
+                }
             }
         }
     }
@@ -185,24 +168,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         auth = FirebaseAuth.getInstance();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         auth.signInWithCredential(credential)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(LoginActivity.this, task -> {
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(LoginActivity.this, "Authentication pass.",
-                                    Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                            Intent intent = new Intent(LoginActivity.this, Start.class);
-                            startActivity(intent);
-                            LoginActivity.this.finish();
-                        }
+                    // If sign in fails, display a message to the user. If sign in succeeds
+                    // the auth state listener will be notified and logic to handle the
+                    // signed in user can be handled in the listener.
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(LoginActivity.this, "Authentication pass.",
+                                Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(LoginActivity.this, Start.class);
+                        startActivity(intent);
+                        LoginActivity.this.finish();
                     }
                 });
     }

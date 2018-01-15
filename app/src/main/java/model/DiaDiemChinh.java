@@ -5,7 +5,7 @@ package model;
  */
 
 public class DiaDiemChinh {
-    private String duong,khuvuc,mucdo,loai,thoiGianBD,thoiGianKT,hinhAnh;
+    private String duong,khuvuc,mucdo,loai,thoiGianBD,thoiGianKT,hinhAnh,tinhThanh,phuong;
     private double latitude,longtitude;
 
     @Override
@@ -17,9 +17,28 @@ public class DiaDiemChinh {
                 ", loai='" + loai + '\'' +
                 ", thoiGianBD='" + thoiGianBD + '\'' +
                 ", thoiGianKT='" + thoiGianKT + '\'' +
+                ", hinhAnh='" + hinhAnh + '\'' +
+                ", tinhThanh='" + tinhThanh + '\'' +
+                ", phuong='" + phuong + '\'' +
                 ", latitude=" + latitude +
                 ", longtitude=" + longtitude +
                 '}';
+    }
+
+    public String getTinhThanh() {
+        return tinhThanh;
+    }
+
+    public void setTinhThanh(String tinhThanh) {
+        this.tinhThanh = tinhThanh;
+    }
+
+    public String getPhuong() {
+        return phuong;
+    }
+
+    public void setPhuong(String phuong) {
+        this.phuong = phuong;
     }
 
     public String getHinhAnh() {
@@ -30,7 +49,7 @@ public class DiaDiemChinh {
         this.hinhAnh = hinhAnh;
     }
 
-    public DiaDiemChinh(String duong, String khuvuc, String mucdo, String loai, String thoiGianBD, double latitude, double longtitude, String hinhanh) {
+    public DiaDiemChinh(String duong, String khuvuc, String mucdo, String loai, String thoiGianBD, double latitude, double longtitude, String hinhanh,String tinh,String phuong) {
         this.duong = duong;
         this.khuvuc = khuvuc;
         this.mucdo = mucdo;
@@ -39,7 +58,8 @@ public class DiaDiemChinh {
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.hinhAnh= hinhanh;
-
+        this.tinhThanh = tinh;
+        this.phuong = phuong;
     }
 
     public String getDuong() {

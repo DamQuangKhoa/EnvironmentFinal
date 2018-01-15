@@ -37,7 +37,26 @@
         <item>Huyện Cần Giờ</item>
     </string-array>
 
-
+<string-array name="tinh">
+    <item>An Giang</item>
+    <item>Bà Rịa-Vũng Tàu</item>
+    <item>Bạc Liêu</item>
+    <item>Bến Tre</item>
+    <item>Bình Dương</item>
+    <item>Bình Phước</item>
+    <item>Cà Mau</item>
+    <item>Cần Thơ</item>
+    <item>Đồng Nai</item>
+    <item>Đồng Tháp</item>
+    <item>Hậu Giang</item>
+    <item>Hồ Chí Minh</item>
+    <item>Kiên Giang</item>
+    <item>Long An</item>
+    <item>Sóc Trăng</item>
+    <item>Tây Ninh</item>
+    <item>Trà Vinh</item>
+    <item>Vĩnh Long</item>
+</string-array>
     <string-array name="duong">
         <item>Alexandre de Rhodes</item>
         <item>Bà Lê Chân</item>
@@ -285,4 +304,9 @@
     <string name="input_address">Xin Nhap Vao Ten Duong</string>
     <string name="input_not_speacialChar">Xin nhap vao ten duong khong co ki tu dac biet</string>
     <string name="input_not_number">Xin nhap vao ten duong khong co so</string>
+    <string name="other">Other</string>
+    <string name="currently">Currently</string>
+    <string name="city">City</string>
+    <string name="locality">locality</string>
+    <string name="checkInput">Please check your input</string>
 </resources>

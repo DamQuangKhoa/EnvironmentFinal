@@ -4,8 +4,8 @@
     <string name="k_t_xe">Kẹt Xe</string>
     <string name="m_c">Mức Độ</string>
     <string name="ng_y_th_ng">Ngày Tháng</string>
-    <string name="nh_p_khu_v_c">Nhập Khu Vực</string>
-    <string name="nh_p_t_n_duong">Nhập Tên Đường</string>
+    <string name="nh_p_khu_v_c">Khu Vực</string>
+    <string name="nh_p_t_n_duong">Tên Đường</string>
     <string name="onhie_m">Ô Nhiễm</string>
     <string name="th_i_gian">Thời Gian</string>
     <string name="btn_link_to_login">Bạn đã đăng ký? Đăng nhập ngay !</string>
@@ -36,4 +36,8 @@
     <string name="action_sign_in_short">Đăng Nhập</string>
     <string name="sign_up_fail">Đăng Ký Thất Bại</string>
     <string name="email_send_fail">Gửi email thất bại!</string>
+    <string name="enter_email">Nhập Email</string>
+    <string name="enter_password">Nhập Password</string>
+    <string name="currently">Địa Điểm Hiện Tại</string>
+    <string name="other">Địa Điểm Khác</string>
 </resources>

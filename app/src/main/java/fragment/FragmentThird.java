@@ -20,12 +20,13 @@ public class FragmentThird extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_third,container,false);
-        Button btnStart = (Button) view.findViewById(R.id.btnStart);
+        View view = inflater.inflate(R.layout.fragment_landing,container,false);
+        Button btnStart = (Button) view.findViewById(R.id.btn_start);
         btnStart.setOnClickListener(v ->{
             Intent intent = new Intent(v.getContext(), Start.class);
             startActivity(intent);
         });
+
         return view;
     }
 }

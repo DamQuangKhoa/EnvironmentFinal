@@ -41,7 +41,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity android:name=".Start">
+        <activity android:name=".GioiThieu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,7 +75,7 @@
         <activity android:name=".ChangeUserInformation" />
         <activity android:name=".MainActivity" />
             <activity android:name=".History"></activity>
-        <activity android:name=".GioiThieu"> </activity>
+        <activity android:name=".Start"> </activity>
     </application>
 
 </manifest>

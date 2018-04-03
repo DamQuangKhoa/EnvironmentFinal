@@ -10,11 +10,14 @@
     <color name="button">#009688</color>
     <color name="buttonRed">#f44336</color>
     <color name="colorAccent">#Fff</color>
-
+    <color name="lightNavy">#1551a2</color>
+    <color name="darkSkyBlue">#3f99dd</color>
     <color name="colorAccentButton">#f2fe71</color>
     <color name="colorPrimary">#00bcd4</color>
-
+    <color name="whiteThree">#ffffff</color>
     <color name="bg_register">#2e3237</color>
     <color name="white">#ffffff</color>
-
+    <color name="lightblue">#9dc3f5</color>
+    <color name="dodgerBlueTwo">#43acf7</color>
+    <color name="deepSkyBlueTwo">#0f7be7</color>
 </resources>

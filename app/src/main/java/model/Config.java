@@ -3,7 +3,7 @@ package model;
 public class Config {
     public static final int HAVE_SPECIAL_CHAR=-1,HAVE_NUMBER=-2,SUCCESS=0,HAVE_NO_WORD=-3;
 //    public static final String URL="http://52.187.4.173:8080/Environment/index.jsp";
-    public static final String URL="http://10.40.1.201:8080/WebServiceDM/index.jsp";
+    public static final String URL="http://elearning.mipustore.com:8080/Environment/";
     public static final String listHistory="history",USER="user";
     public static final String TENDUONG= "duong",KHUVUC="KV",MUCDO="MD"
             ,LOAI="Loai",TIME="time",LAT="lat",LONG="long",HINHANH="hinhanh";

@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     TinyDB tinydb;
 
 
-
     Context mContext = MainActivity.this;
     Calendar calendar = Calendar.getInstance();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -153,11 +152,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main2);
         addControls();
         addEvents();
+        initLocation();
     }
 
     private void initLocation() {
+//        makeLog(loc.getLatitude()+"__"+loc.getLongitude());
         address=getAddress(loc);
-        sendAddressToWeb(Config.currentAddress);
+        if(address != null){
+        sendAddressToWeb(address);}
     }
 
     private String getAddress(Location loc) {
@@ -172,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             String state = addresses.get(0).getLocality(); // phuong
             String demo3 = addresses.get(0).getFeatureName(); // ten duong
 
-            Log.e("Addresses",address+"____"+demo+"____"+city+"____"+state+"____"+demo3);
+            Log.e(getString(R.string.MainActivityError),address+"____"+demo+"____"+city+"____"+state+"____"+demo3);
 //        Toast.makeText(this, address, Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     ;
 public void makeLog(String message){
-    Log.e("MainActivity",message);
+    Log.e(getString(R.string.MainActivityError),message);
 }
     private void addControls() {
         tinydb = new TinyDB(MainActivity.this);
@@ -206,12 +208,15 @@ public void makeLog(String message){
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        progressDialog = new ProgressDialog(MainActivity.this);
+
+
+
+	    progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setTitle("Loading Map...");
         progressDialog.setMessage("Vui Lòng Chờ...");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-        gps = new GPSTracker(MainActivity.this);
+//        gps = new GPSTracker(MainActivity.this);
         xemTinTuc = false;
         checkMap();
 
@@ -224,11 +229,13 @@ public void makeLog(String message){
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                makeLog("Click floatting button");
                 intent = new Intent(MainActivity.this, ThongTin.class);
 //                    Log.e("AAA",loca+"");
                 if (loc != null) {
                     intent.putExtra(Config.LAT, loc.getLatitude());
                     intent.putExtra(Config.LONG, loc.getLongitude());
+                    makeLog(loc.getLatitude()+"_"+loc.getLongitude());
                     startActivity(intent);
                 }
             }
@@ -262,7 +269,7 @@ public void makeLog(String message){
         if (user != null) {
             // User is signed in
             userLocal = tinydb.getObject("user", User.class) == null ? new User(mContext) : tinydb.getObject("user", User.class);
-            Log.e("user", userLocal.toString());
+            Log.e(getString(R.string.MainActivityError), userLocal.toString());
             userLocal.setEmail(user.getEmail());
             txtEmail.setText(userLocal.getEmail());
             txtAddress.setText(userLocal.getAddress());
@@ -279,24 +286,25 @@ public void makeLog(String message){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 
+
         if (locationManager != null) {
             boolean gpsIsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean networkIsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (gpsIsEnabled) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+MyFunction.showDialog(this,"Please enable your location");
                     return;
                 }
-                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+                else{
+
+	                loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+	                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+                }
+
             }
             else if(networkIsEnabled)
             {
@@ -515,8 +523,8 @@ public void makeLog(String message){
                 Map<String,String>  params = new HashMap<>();
                 params.put(Config.ACTION,Config.CSA);
                 params.put(Config.TENDUONG,address);
-                params.put(Config.TIME,sdf1.format(calendar.getTime()));
-//                params.put(Config.TIME,Config.currentTime);
+//                params.put(Config.TIME,sdf1.format(calendar.getTime()));
+                params.put(Config.TIME,Config.currentTime);
                 return params;
             }
         };
@@ -661,9 +669,11 @@ private void makeCircle(LatLng lat){
     }
     @Override
     public void onLocationChanged(Location location) {
+makeLog("Vao Onlocation Changed");
         loc = location;
         loca= new LatLng(location.getLatitude(), location.getLongitude());
 //            Log.e("AAA","Lating: "+ loca);
+        makeLog(loca.latitude+"_"+loca.longitude);
         if(mMap != null && !xemTinTuc){
             mMap.clear();
             mMap.addMarker(new MarkerOptions()
@@ -700,7 +710,8 @@ private void makeCircle(LatLng lat){
         {
             int erroCode ;
             if((erroCode=MyFunction.testString(query))== Config.SUCCESS) {
-                sendAddressToWeb(query);
+	            Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
+	            sendAddressToWeb(query);
                 saveAddressToSharePre(query);
                 return true;
             }

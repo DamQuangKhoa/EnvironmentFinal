@@ -95,12 +95,13 @@ public void makeLog(String message){
            holder.imgHinh.setImageResource(R.drawable.ketxe);
        }
        else {
-           if ((bm=convertFrom64ToBit(hinhanh)) != null) {
+           if (null != (bm=convertFrom64ToBit(hinhanh)) ) {
                holder.imgHinh.setImageBitmap(bm);
            }
        }
     }
     public Bitmap convertFrom64ToBit(String base64){
+    if(base64 == null|| base64.equalsIgnoreCase("")) return null;
         byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         return decodedByte;
@@ -166,8 +167,8 @@ public void makeLog(String message){
             super(view);
            relate = (RelativeLayout) view.findViewById(R.id.relative);
           txtDuong= (TextView) view.findViewById(R.id.txtDuong);
-//           txtQuan= (TextView) view.findViewById(R.id.txtQuan);
-//          txtThoiGian= (TextView) view.findViewById(R.id.txtThoiGian);
+           txtQuan= (TextView) view.findViewById(R.id.txtQuan);
+          txtThoiGian= (TextView) view.findViewById(R.id.txtTime);
             txtMucDo = (TextView) view.findViewById(R.id.txtMucDo);
             imgHinh = (ImageView) view.findViewById(R.id.imgHinh);
             this.mListener = mListener;

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_blue"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/slide1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="101dp"
+                android:layout_height="122dp"
+                android:src="@mipmap/ic_nonglam" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ứng dụng môi trường"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/distance_8dp"
+                android:text="Không Lo Kẹt Xe"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/distance_8dp"
+                android:gravity="center"
+                android:text="Kết nối thông tin với hàng ngàn tuyến đường chuyên nghiệp  "
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="310dp"
+                android:layout_height="43dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/bg_round_corner_button_blue_stroke_background"
+                android:text="Chạm để bắt đầu "
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_14sp" />
+
+            <Button
+                android:id="@+id/btn_help"
+                android:layout_width="310dp"
+                android:layout_height="43dp"
+                android:layout_marginBottom="@dimen/distance_2dp"
+                android:layout_marginTop="@dimen/distance_16dp"
+                android:background="@drawable/bg_round_corner_button_white_stroke"
+                android:text="xem hướng dẫn"
+                android:textColor="@color/bg_register"
+                android:textSize="@dimen/text_14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

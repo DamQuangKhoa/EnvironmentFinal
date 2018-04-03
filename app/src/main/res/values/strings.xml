@@ -309,4 +309,5 @@
     <string name="city">City</string>
     <string name="locality">locality</string>
     <string name="checkInput">Please check your input</string>
+    <string name="MainActivityError">MainActivity</string>
 </resources>

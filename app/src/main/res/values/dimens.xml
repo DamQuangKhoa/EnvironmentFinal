@@ -7,4 +7,17 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="distance_2dp">2dp</dimen>
+    <dimen name="text_12sp">12sp</dimen>
+    <dimen name="text_36sp">36sp</dimen>
+    <dimen name="text_14sp">14sp</dimen>
+    <dimen name="text_15sp">15sp</dimen>
+    <dimen name="text_17sp">17sp</dimen>
+    <dimen name="distance_8dp">8dp</dimen>
+    <dimen name="distance_16dp">16dp</dimen>
+    <dimen name="distance_24dp">24dp</dimen>
+    <dimen name="distance_32dp">32dp</dimen>
+    <dimen name="distance_10dp">10dp</dimen>
 </resources>

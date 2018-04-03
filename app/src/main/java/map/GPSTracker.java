@@ -33,7 +33,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
-    private final Context mContext;
+    private  final Context mContext;
     // flag for GPS status
     boolean isGPSEnabled = false;
     // flag for network status
@@ -161,7 +161,7 @@ public class GPSTracker extends Service implements LocationListener {
     /**
      * Function to show settings alert dialog
      * */
-    public void showSettingsAlert(){
+    public  void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext,R.style.MyDialogTheme);
 
         // Setting Dialog Title
